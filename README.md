@@ -23,4 +23,4 @@ Personal site built as a static HTML/CSS/JS project. No build tooling or framewo
 This repo is a personal build, not a turnkey template or theme. Feel free to borrow ideas, but it was never intended for straight cloning/deploying, and I don’t offer support for that.
 
 ## License
-MIT License. See `LICENSE` for full text.
+MIT License — see [LICENSE](LICENSE) for the full text.

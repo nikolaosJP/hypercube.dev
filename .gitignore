@@ -1,9 +1,0 @@
-# Local/AI helper files
-.claude
-CLAUDE.md
-.README.md.swp
-
-# OS/editor cruft
-.DS_Store
-*.swp
-*.swo
