@@ -1,8 +1,0 @@
-{
-  "title": "Energy Market Forecasting",
-  "cardTitle": "Energy Market Forecasting",
-  "cardDescription": "€1.38M simulated profit via ML price predictions.",
-  "modalDescription": "Day-ahead energy price prediction system using XGBoost and Optuna optimization. Achieved €1.38M in simulated trading profit through accurate price forecasting and strategic bidding algorithms for the energy market.",
-  "tags": ["XGBoost", "Optuna", "Finance"],
-  "link": "post.html?id=energy-market-forecasting"
-}

@@ -1,8 +1,0 @@
-{
-  "title": "AI Resume Tailor",
-  "cardTitle": "AI Resume Tailor",
-  "cardDescription": "Automated resume customization via Gemini API.",
-  "modalDescription": "Automated resume customization tool powered by Google Gemini API. Intelligently adapts resume content to match job descriptions, optimizes keyword placement, and generates LaTeX-formatted professional resumes tailored for each application.",
-  "tags": ["AI", "Gemini API", "LaTeX"],
-  "link": "post.html?id=ai-resume-tailor"
-}

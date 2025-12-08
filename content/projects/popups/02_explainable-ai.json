@@ -1,8 +1,0 @@
-{
-  "title": "Explainable AI Platform",
-  "cardTitle": "Explainable AI Platform",
-  "cardDescription": "Interactive tool for ML model interpretability.",
-  "modalDescription": "Interactive web application revealing model decision-making processes using state-of-the-art interpretability tools. Provides visual explanations for predictions, feature importance analysis, and model behavior insights for various machine learning models.",
-  "tags": ["XAI", "Python", "Web"],
-  "link": "post.html?id=explainable-ai"
-}

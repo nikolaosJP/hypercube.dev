@@ -1,6 +1,6 @@
 ---
 title: Explainable AI
-date: November 20, 2025
+date: December 15, 2025
 tags: "#XAI #Python #Visualization"
 ---
 
@@ -10,13 +10,13 @@ Most AI output is like asking a goldfish for tax advice: it reacts, technically,
 
 This platform doesn’t try to make the model wiser, it simply tries to convince it to explain itself in a way that resembles communication instead of mysticism.
 
+![xai sample](/content/projects/assets/xai.jpeg)
+
 ## Where Curiosity Doesn’t Break Anything
 
 Instead of treating the model like an ancient relic sealed behind velvet ropes, the platform invites you to poke, drag, wiggle, tweak, and generally behave like a person whose curiosity flame hasn’t yet died out. If you try something, the system responds right away. Move a point, and you see how the model bends around it. Nudge a feature, and the model politely reveals what changed and why it mattered.
 
 Everything is designed so exploration feels welcomed, not punished. No arcane error messages, no “this is for experts only,” no polite scolding for wandering off the golden path. Just a space where curiosity actually gets you answers.
-
----
 
 ## Explanations That Behave Like Explanations
 
@@ -26,15 +26,11 @@ Linear models share their math the way someone might reveal a neat trick. Trees 
 
 The result is an experience where explanations feel like “Oh, that makes sense,” not “Let me Google this for an hour.”
 
----
-
 ## Built With Tools That Don’t Hide Behind Curtains
 
 Behind the scenes, things stay pleasantly straightforward. Python and Flask handle the logic in a way you could open up and inspect without bracing for spiritual injury. The front end uses plain JavaScript and Canvas, which means things draw, move, and update exactly the way you expect. KaTeX renders math cleanly enough that you can follow along without feeling like the screen is your mortal enemy.
 
 No stack gymnastics. No black-box surprises. Just tools doing their job.
-
----
 
 ## Why Anyone Would Care
 
@@ -42,3 +38,6 @@ As models get more involved in decisions that affect people’s lives (cough, LL
 
 This platform is here to make that transparency feel natural instead of intimidating, and to turn explanations into something more helpful than a shrug dressed up as a probability score.
 
+<div class="cta-wrapper">
+  <a class="cta-button" href="https://github.com/nikolaosJP/Projects/tree/main/Explainable-AI-XAI" target="_blank" rel="noopener noreferrer">View the code</a>
+</div>

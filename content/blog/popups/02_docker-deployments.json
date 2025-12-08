@@ -1,8 +1,0 @@
-{
-  "title": "Automating Docker Deployments",
-  "cardTitle": "Automating Docker Deployments",
-  "cardDescription": "Building a custom CLI tool to manage container orchestration.",
-  "modalDescription": "A deep dive into building a custom CLI tool for managing Docker container orchestration. This article explores best practices for automating deployment pipelines, handling multi-container applications, and implementing blue-green deployments. Learn how to streamline your DevOps workflow with Node.js and Docker APIs.",
-  "tags": ["Oct 10", "DevOps", "Docker"],
-  "link": "post.html?id=docker-deployments"
-}

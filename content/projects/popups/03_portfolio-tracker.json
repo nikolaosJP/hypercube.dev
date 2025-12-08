@@ -1,8 +1,0 @@
-{
-  "title": "Portfolio Tracker",
-  "cardTitle": "Portfolio Tracker",
-  "cardDescription": "Analytics dashboard with rebalancing insights.",
-  "modalDescription": "Analytics dashboard for Interactive Brokers accounts with intelligent rebalancing recommendations. Tracks portfolio performance, asset allocation, and provides data-driven insights for portfolio optimization and risk management.",
-  "tags": ["Python", "Finance", "APIs"],
-  "link": "post.html?id=portfolio-tracker"
-}

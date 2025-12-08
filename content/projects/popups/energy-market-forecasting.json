@@ -1,0 +1,8 @@
+{
+  "title": "Energy Market Forecasting",
+  "cardTitle": "Energy Market Forecasting",
+  "cardDescription": "Day-ahead energy oracle for bid optimization.",
+  "modalDescription": "Day-ahead energy price pipeline: STL cleaning, feature engineering, and an Optuna-tuned XGBoost that delivered €1.38M in simulated bids instead of vibes.",
+  "tags": ["#Python", "#QuantEnergy", "#TimeSeries"],
+  "link": "post.html?id=energy-market-forecasting"
+}

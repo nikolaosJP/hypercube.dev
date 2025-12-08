@@ -1,6 +1,6 @@
 ---
 title: Cost of Living Scraper
-date: November 18, 2025
+date: April 12, 2025
 tags: "#WebScraping #Python #Data #Automation"
 ---
 
@@ -75,4 +75,3 @@ COL-adjusted, that Tokyo salary behaves like **~135k CHF in Zurich**.
 In other words, Zurich is the bougie final boss of cost of living, and Tokyo is the surprisingly reasonable mid-game level. The bigger paycheck isn’t always the one that actually buys you dinner.
 
 [View on GitHub](https://github.com/nikolaosJP/Projects/tree/main/Cost-of-Living-Scraper)
-

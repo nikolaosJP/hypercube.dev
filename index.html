@@ -11,8 +11,7 @@
     <link rel="dns-prefetch" href="https://text.pollinations.ai">
     <link rel="dns-prefetch" href="https://wttr.in">
 
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;600;700&display=block" rel="stylesheet">
     
     <style>
         :root {
@@ -429,7 +428,7 @@
                 <a href="index.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Terminal</a>
                 <a href="post.html?id=about" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> About</a>
                 <a href="projects-blog.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Projects</a>
-                <a href="blog.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Blog</a>
+                <a href="blog.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Publications</a>
                 <a href="index.html#skills" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Skills</a>
                 <a href="index.html#contact" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Contact</a>
             </div>
@@ -469,7 +468,7 @@
                 <div class="tab-box">
                     <button class="tab-btn active" data-tab="about" onclick="switchTab('about')">About Me</button>
                     <button class="tab-btn" data-tab="projects" onclick="switchTab('projects')">Projects</button>
-                    <button class="tab-btn" data-tab="articles" onclick="switchTab('articles')">Latest Articles</button>
+                    <button class="tab-btn" data-tab="articles" onclick="switchTab('articles')">Publications</button>
                 </div>
             </div>
 
@@ -494,35 +493,35 @@
             <div id="tab-projects" class="tab-content">
                 <div class="grid-3" id="projects-grid">
                     <!-- Projects pre-rendered for instant display -->
-                    <div class="card-box" onclick="openModal('Energy Market Forecasting','Day-ahead energy price prediction system using XGBoost and Optuna optimization. Achieved €1.38M in simulated trading profit through accurate price forecasting and strategic bidding algorithms for the energy market.',['XGBoost','Optuna','Finance'],'post.html?id=energy-market-forecasting')">
-                        <h3>Energy Market Forecasting</h3>
-                        <p>€1.38M simulated profit via ML price predictions.</p>
-                        <div class="tech-stack-tags"><span class="tag">XGBoost</span><span class="tag">Optuna</span></div>
-                    </div>
-                    <div class="card-box" onclick="openModal('Explainable AI Platform','Interactive web application revealing model decision-making processes using state-of-the-art interpretability tools. Provides visual explanations for predictions, feature importance analysis, and model behavior insights for various machine learning models.',['XAI','Python','Web'],'post.html?id=explainable-ai')">
+                    <div class="card-box" data-popup="explainable-ai" onclick="openProjectPopup('explainable-ai', this)">
                         <h3>Explainable AI Platform</h3>
-                        <p>Interactive tool for ML model interpretability.</p>
-                        <div class="tech-stack-tags"><span class="tag">XAI</span><span class="tag">Python</span></div>
+                        <p>An ML confession booth that actually explains itself.</p>
+                        <div class="tech-stack-tags"><span class="tag">#XAI</span><span class="tag">#Python</span><span class="tag">#Visualization</span></div>
                     </div>
-                    <div class="card-box" onclick="openModal('Portfolio Tracker','Analytics dashboard for Interactive Brokers accounts with intelligent rebalancing recommendations. Tracks portfolio performance, asset allocation, and provides data-driven insights for portfolio optimization and risk management.',['Python','Finance','APIs'],'post.html?id=portfolio-tracker')">
+                    <div class="card-box" data-popup="portfolio-tracker" onclick="openProjectPopup('portfolio-tracker', this)">
                         <h3>Portfolio Tracker</h3>
-                        <p>Analytics dashboard with rebalancing insights.</p>
-                        <div class="tech-stack-tags"><span class="tag">Python</span><span class="tag">Finance</span></div>
+                        <p>IBKR receipts translated into a clean rebalancing checklist.</p>
+                        <div class="tech-stack-tags"><span class="tag">#Python</span><span class="tag">#QuantFinance</span><span class="tag">#PortfolioAnalytics</span></div>
                     </div>
-                    <div class="card-box" onclick="openModal('AI Resume Tailor','Automated resume customization tool powered by Google Gemini API. Intelligently adapts resume content to match job descriptions, optimizes keyword placement, and generates LaTeX-formatted professional resumes tailored for each application.',['AI','Gemini API','LaTeX'],'post.html?id=ai-resume-tailor')">
+                    <div class="card-box" data-popup="energy-market-forecasting" onclick="openProjectPopup('energy-market-forecasting', this)">
+                        <h3>Energy Market Forecasting</h3>
+                        <p>Optuna-tuned price oracle so bids stop being vibes-based.</p>
+                        <div class="tech-stack-tags"><span class="tag">#Python</span><span class="tag">#QuantEnergy</span><span class="tag">#TimeSeries</span></div>
+                    </div>
+                    <div class="card-box" data-popup="goal-tracker" onclick="openProjectPopup('goal-tracker', this)">
+                        <h3>Goal Tracker</h3>
+                        <p>Turns daily tasks into a GPS for your big yearly goals.</p>
+                        <div class="tech-stack-tags"><span class="tag">#React</span><span class="tag">#Python</span><span class="tag">#Productivity</span></div>
+                    </div>
+                    <div class="card-box" data-popup="cost-of-living-scraper" onclick="openProjectPopup('cost-of-living-scraper', this)">
+                        <h3>Cost of Living Scraper</h3>
+                        <p>Numbeo-reading bot that turns relocations into planned expenses.</p>
+                        <div class="tech-stack-tags"><span class="tag">#WebScraping</span><span class="tag">#Python</span><span class="tag">#Data</span></div>
+                    </div>
+                    <div class="card-box" data-popup="ai-resume-tailor" onclick="openProjectPopup('ai-resume-tailor', this)">
                         <h3>AI Resume Tailor</h3>
-                        <p>Automated resume customization via Gemini API.</p>
-                        <div class="tech-stack-tags"><span class="tag">AI</span><span class="tag">Gemini API</span></div>
-                    </div>
-                    <div class="card-box" onclick="openModal('Anomaly Detection','Transfer learning system using VGG16 for manufacturing defect detection on the MVTec dataset. Identifies surface anomalies, structural defects, and quality issues in industrial products with high accuracy using computer vision techniques.',['VGG16','Computer Vision','Transfer Learning'],'post.html?id=anomaly-detection')">
-                        <h3>Anomaly Detection</h3>
-                        <p>VGG16 transfer learning for defect detection.</p>
-                        <div class="tech-stack-tags"><span class="tag">VGG16</span><span class="tag">Computer Vision</span></div>
-                    </div>
-                    <div class="card-box" onclick="openModal('Movie Recommendation System','Collaborative filtering engine using matrix factorization and neural networks on the MovieLens dataset. Provides personalized movie recommendations by learning user preferences and identifying similar viewing patterns across the user base.',['Neural Networks','Collaborative Filtering','Python'],'post.html?id=movie-recommendation')">
-                        <h3>Movie Recommendation System</h3>
-                        <p>Neural collaborative filtering on MovieLens.</p>
-                        <div class="tech-stack-tags"><span class="tag">Neural Networks</span><span class="tag">Collaborative Filtering</span></div>
+                        <p>Gemini ghostwriter that tailors your resume without lying.</p>
+                        <div class="tech-stack-tags"><span class="tag">#AI</span><span class="tag">#GeminiAPI</span><span class="tag">#LaTeX</span></div>
                     </div>
                 </div>
                 <div style="text-align: right;">
@@ -532,25 +531,24 @@
 
             <div id="tab-articles" class="tab-content">
                 <div class="grid-3" id="articles-grid">
-                    <!-- Articles pre-rendered for instant display -->
-                    <div class="card-box" onclick="openModal('Integrating ECharts with React','Learn how to build stunning, interactive data visualizations using Apache ECharts in React applications. This comprehensive guide covers component architecture, real-time data updates, and integration with AI-powered analytics. Includes practical examples of creating responsive charts that update dynamically based on user interactions and API responses.',['Nov 24','React','Data Viz'],'post.html?id=echarts-react')">
-                        <h3>Integrating ECharts with React</h3>
-                        <p>Building dynamic data visualizations powered by real-time AI.</p>
-                        <div class="tech-stack-tags"><span class="tag">Nov 24</span><span class="tag">React</span></div>
-                    </div>
-                    <div class="card-box" onclick="openModal('Automating Docker Deployments','A deep dive into building a custom CLI tool for managing Docker container orchestration. This article explores best practices for automating deployment pipelines, handling multi-container applications, and implementing blue-green deployments. Learn how to streamline your DevOps workflow with Node.js and Docker APIs.',['Oct 10','DevOps','Docker'],'post.html?id=docker-deployments')">
-                        <h3>Automating Docker Deployments</h3>
-                        <p>Building a custom CLI tool to manage container orchestration.</p>
-                        <div class="tech-stack-tags"><span class="tag">Oct 10</span><span class="tag">DevOps</span></div>
-                    </div>
-                    <div class="card-box" onclick="openModal('LLM Memory Management','Explore advanced strategies for handling context windows in production LLM applications. This guide covers techniques like summarization, selective memory, conversation compression, and hybrid storage approaches. Learn how to build AI assistants that maintain coherent, long-running conversations without hitting token limits.',['Sep 15','AI','LLMs'],'post.html?id=llm-memory')">
-                        <h3>LLM Memory Management</h3>
-                        <p>Strategies for managing context windows in long-running conversations.</p>
-                        <div class="tech-stack-tags"><span class="tag">Sep 15</span><span class="tag">AI</span></div>
-                    </div>
+                    <a class="card-box" href="post.html?id=tale-two-florida-cities">
+                        <h3>Flood risk perceptions in Florida cities</h3>
+                        <p>Oct 24, 2024</p>
+                        <div class="tech-stack-tags"><span class="tag">2024</span><span class="tag">flooding</span></div>
+                    </a>
+                    <a class="card-box" href="post.html?id=demand-response-ottawa">
+                        <h3>Residential demand response in Ottawa</h3>
+                        <p>Jul 24, 2023</p>
+                        <div class="tech-stack-tags"><span class="tag">2023</span><span class="tag">demand-response</span></div>
+                    </a>
+                    <a class="card-box" href="post.html?id=residential-demand-response-ontario">
+                        <h3>Residential DR determinants in Ontario</h3>
+                        <p>Oct 16, 2021</p>
+                        <div class="tech-stack-tags"><span class="tag">2021</span><span class="tag">smart-grid</span></div>
+                    </a>
                 </div>
                 <div style="text-align: right;">
-                    <a href="blog.html" class="view-all-btn">VIEW_ALL_ARCHIVES -></a>
+                    <a href="blog.html" class="view-all-btn">VIEW_ALL_PUBLICATIONS -></a>
                 </div>
             </div>
         </div>
@@ -833,7 +831,7 @@
         window.renderSkill = renderSkill;
         renderSkill('backend');
 
-        const tabs = { about: 'About Me', projects: 'Projects', articles: 'Latest Articles' };
+        const tabs = { about: 'About Me', projects: 'Projects', articles: 'Publications' };
 
         // Cache tab elements for instant switching
         const tabElements = {
@@ -923,6 +921,55 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
         });
+
+        // Project popups sourced from JSON for modularity
+        const popupData = {};
+        const popupFiles = {
+            'energy-market-forecasting': 'energy-market-forecasting',
+            'explainable-ai': 'explainable-ai',
+            'portfolio-tracker': 'portfolio-tracker',
+            'ai-resume-tailor': 'ai-resume-tailor',
+            'goal-tracker': 'goal-tracker',
+            'cost-of-living-scraper': 'cost-of-living-scraper'
+        };
+
+        function openProjectPopup(key, el) {
+            const data = popupData[key];
+            if (data) {
+                openModal(
+                    data.title || data.cardTitle || '',
+                    data.modalDescription || data.cardDescription || '',
+                    Array.isArray(data.tags) ? data.tags : [],
+                    data.link || '#'
+                );
+                return;
+            }
+            // Fallback to element content if JSON not loaded yet
+            if (el) {
+                const title = el.querySelector('h3')?.textContent || '';
+                const desc = el.querySelector('p')?.textContent || '';
+                const tags = Array.from(el.querySelectorAll('.tag')).map(t => t.textContent);
+                const link = el.getAttribute('href') || '#';
+                openModal(title, desc, tags, link);
+            }
+        }
+
+        async function loadProjectPopups() {
+            const entries = Object.entries(popupFiles);
+            await Promise.all(entries.map(async ([key, file]) => {
+                try {
+                    const res = await fetch(`content/projects/popups/${file}.json`, { cache: 'no-cache' });
+                    if (!res.ok) return;
+                    const json = await res.json();
+                    popupData[key] = json;
+                } catch (err) {
+                    // ignore; fallback will use card content
+                }
+            }));
+        }
+
+        loadProjectPopups();
+
     </script>
 </body>
 </html>

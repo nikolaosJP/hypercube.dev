@@ -1,0 +1,8 @@
+{
+  "title": "Portfolio Tracker",
+  "cardTitle": "Portfolio Tracker",
+  "cardDescription": "IBKR exports cleaned into rebalancing checklists.",
+  "modalDescription": "IBKR export therapist that cleans the hieroglyphics, grabs live prices, and hands back a rebalancing shopping list with receipts.",
+  "tags": ["#Python", "#QuantFinance", "#PortfolioAnalytics"],
+  "link": "post.html?id=portfolio-tracker"
+}

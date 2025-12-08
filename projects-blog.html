@@ -7,9 +7,7 @@
     <!-- Performance optimizations -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;600;700&display=block" rel="stylesheet">
 
     <style>
         :root {
@@ -165,7 +163,7 @@
                 <a href="index.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Terminal</a>
                 <a href="post.html?id=about" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> About</a>
                 <a href="projects-blog.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Projects</a>
-                <a href="blog.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Blog</a>
+                <a href="blog.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Publications</a>
                 <a href="index.html#skills" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Skills</a>
                 <a href="index.html#contact" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Contact</a>
             </div>
@@ -185,7 +183,7 @@
                 <li><a href="index.html">Terminal</a></li>
                 <li><a href="post.html?id=about">About</a></li>
                 <li><a href="projects-blog.html">Projects</a></li>
-                <li><a href="blog.html">Articles</a></li>
+                <li><a href="blog.html">Publications</a></li>
             </ul>
 
             <hr class="nav-separator">
@@ -203,32 +201,32 @@
         <ul class="post-list">
             <li>
                 <a href="post.html?id=explainable-ai" class="post-item">
-                    <span class="post-date">Nov 20</span>
-                    <span class="post-title">Explainable AI Platform</span>
-                </a>
-            </li>
-            <li>
-                <a href="post.html?id=energy-market-forecasting" class="post-item">
-                    <span class="post-date">Nov 18</span>
-                    <span class="post-title">Energy Market Forecasting</span>
+                    <span class="post-date">Dec 15</span>
+                    <span class="post-title">Explainable AI</span>
                 </a>
             </li>
             <li>
                 <a href="post.html?id=portfolio-tracker" class="post-item">
-                    <span class="post-date">Nov 18</span>
+                    <span class="post-date">Oct 2</span>
                     <span class="post-title">Portfolio Tracker</span>
                 </a>
             </li>
             <li>
-                <a href="post.html?id=cost-of-living-scraper" class="post-item">
-                    <span class="post-date">Nov 18</span>
-                    <span class="post-title">Cost of Living Scraper</span>
+                <a href="post.html?id=energy-market-forecasting" class="post-item">
+                    <span class="post-date">Aug 8</span>
+                    <span class="post-title">Energy Market Forecasting</span>
                 </a>
             </li>
             <li>
                 <a href="post.html?id=goal-tracker" class="post-item">
-                    <span class="post-date">Nov 18</span>
+                    <span class="post-date">Jun 4</span>
                     <span class="post-title">Goal Tracker</span>
+                </a>
+            </li>
+            <li>
+                <a href="post.html?id=cost-of-living-scraper" class="post-item">
+                    <span class="post-date">Apr 12</span>
+                    <span class="post-title">Cost of Living Scraper</span>
                 </a>
             </li>
         </ul>
@@ -331,33 +329,67 @@
             return match ? decodeURIComponent(match[1]) : null;
         }
 
-        async function refreshProjectTitles() {
-            const items = Array.from(document.querySelectorAll('.post-item'));
-            await Promise.all(items.map(async (item) => {
-                const href = item.getAttribute('href');
+        const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' });
+
+        function parseDateString(dateStr) {
+            if (!dateStr) return null;
+            const parsed = new Date(dateStr);
+            return Number.isNaN(parsed.getTime()) ? null : parsed;
+        }
+
+        function formatDate(date) {
+            return dateFormatter.format(date);
+        }
+
+        async function refreshProjectMeta() {
+            const listItems = Array.from(document.querySelectorAll('.post-list li'));
+            const enriched = await Promise.all(listItems.map(async (li) => {
+                const item = li.querySelector('.post-item');
+                const href = item?.getAttribute('href');
                 const postId = extractIdFromHref(href);
-                if (!postId) return;
+                if (!postId) return { li, item };
 
                 try {
                     const res = await fetch(`content/projects/${postId}.md`, { cache: 'no-cache' });
-                    if (!res.ok) return;
+                    if (!res.ok) return { li, item };
                     const text = await res.text();
                     const meta = parseFrontmatter(text);
-                    if (meta.title) {
-                        const titleEl = item.querySelector('.post-title');
-                        if (titleEl) titleEl.textContent = meta.title;
-                    }
+                    const parsedDate = parseDateString(meta.date);
+                    return { li, item, meta, parsedDate };
                 } catch (err) {
-                    // Silent fail - title will use hardcoded fallback
+                    return { li, item };
                 }
             }));
+
+            enriched.forEach(({ li, item, meta, parsedDate }) => {
+                if (!li || !item) return;
+                if (meta?.title) {
+                    const titleEl = item.querySelector('.post-title');
+                    if (titleEl) titleEl.textContent = meta.title;
+                }
+                if (parsedDate) {
+                    item.dataset.timestamp = parsedDate.getTime();
+                    const dateEl = item.querySelector('.post-date');
+                    if (dateEl) dateEl.textContent = formatDate(parsedDate);
+                }
+            });
+
+            document.querySelectorAll('.post-list').forEach((list) => {
+                const items = Array.from(list.querySelectorAll('li'));
+                items.sort((a, b) => {
+                    const tsA = Number((a.querySelector('.post-item')?.dataset.timestamp) || 0);
+                    const tsB = Number((b.querySelector('.post-item')?.dataset.timestamp) || 0);
+                    return tsB - tsA;
+                });
+                items.forEach((item) => list.appendChild(item));
+            });
         }
 
         function runWhenReady() {
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', refreshProjectTitles);
+                document.addEventListener('DOMContentLoaded', refreshProjectMeta);
             } else {
-                refreshProjectTitles();
+                refreshProjectMeta();
             }
         }
 

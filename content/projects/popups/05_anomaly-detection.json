@@ -1,8 +1,0 @@
-{
-  "title": "Anomaly Detection",
-  "cardTitle": "Anomaly Detection",
-  "cardDescription": "VGG16 transfer learning for defect detection.",
-  "modalDescription": "Transfer learning system using VGG16 for manufacturing defect detection on the MVTec dataset. Identifies surface anomalies, structural defects, and quality issues in industrial products with high accuracy using computer vision techniques.",
-  "tags": ["VGG16", "Computer Vision", "Transfer Learning"],
-  "link": "post.html?id=anomaly-detection"
-}

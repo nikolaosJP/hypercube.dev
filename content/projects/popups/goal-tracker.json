@@ -1,0 +1,8 @@
+{
+  "title": "Goal Tracker",
+  "cardTitle": "Goal Tracker",
+  "cardDescription": "Turns daily tasks into GPS for big yearly goals.",
+  "modalDescription": "Bridges the gap between today’s boring tasks and this year’s heroic goals so your vision board stops freelancing.",
+  "tags": ["#React", "#Python", "#Productivity", "#WebDev"],
+  "link": "post.html?id=goal-tracker"
+}

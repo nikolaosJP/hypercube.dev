@@ -1,8 +1,0 @@
-{
-  "title": "Integrating ECharts with React",
-  "cardTitle": "Integrating ECharts with React",
-  "cardDescription": "Building dynamic data visualizations powered by real-time AI.",
-  "modalDescription": "Learn how to build stunning, interactive data visualizations using Apache ECharts in React applications. This comprehensive guide covers component architecture, real-time data updates, and integration with AI-powered analytics. Includes practical examples of creating responsive charts that update dynamically based on user interactions and API responses.",
-  "tags": ["Nov 24", "React", "Data Viz"],
-  "link": "post.html?id=echarts-react"
-}

@@ -1,6 +1,6 @@
 ---
 title: Rent vs Buy Simulator
-date: August 22, 2024
+date: February 14, 2024
 tags: "#Finance #Modeling #RealEstate #Python"
 ---
 

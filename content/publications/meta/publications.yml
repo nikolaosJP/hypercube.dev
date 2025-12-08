@@ -1,0 +1,52 @@
+count: 10
+publications:
+  - short_title: "Flood risk perceptions in Florida cities"
+    title: "A tale of two (Florida) cities: perceptions of flooding risk and adaptation in Tampa's Hyde Park and Saint Augustine"
+    date: 2024-10-24
+    tags: [flooding, adaptation, risk-perception]
+    link: https://doi.org/10.1007/s11027-024-10129-1
+  - short_title: "Residential demand response in Ottawa"
+    title: "Human-centered determinants of price and incentive-based residential demand response in Ottawa, Canada"
+    date: 2023-07-24
+    tags: [demand-response, energy, incentives]
+    link: https://doi.org/10.1007/s12053-023-10135-3
+  - short_title: "Residential DR determinants in Ontario"
+    title: "Expert assessment of prioritized determinants for a smarter grid through the lens of residential demand response: The case study of Ontario, Canada"
+    date: 2021-10-16
+    tags: [smart-grid, demand-response, Canada]
+    link: https://www.researchgate.net/publication/357375929_Expert_Assessment_of_Prioritized_Determinants_For_a_Smarter_Grid_Through_The_Lens_of_Residential_Demand_Response_The_Case_Study_of_Ontario_Canada
+  - short_title: "Residential demand response in Japan"
+    title: "Shedding light on the factors that influence residential demand response in Japan"
+    date: 2021-05-13
+    tags: [demand-response, energy, Japan]
+    link: https://doi.org/10.3390/en14102795
+  - short_title: "Shinchi Town sustainability survey"
+    title: "Insights on Shinchi Town's sustainable trajectory through community input"
+    date: 2020-10-26
+    tags: [community, sustainability, recovery]
+    link: https://www.researchgate.net/publication/349194848_Insights_on_Shinci_Town%27s_Sustainable_Trajectory_Through_Community_Input
+  - short_title: "Residential DSM/DER willingness in Japan"
+    title: "Assessing the willingness of residential electricity consumers to adopt demand side management and distributed energy resources: A case study on the Japanese market"
+    date: 2019-12-02
+    tags: [demand-side-management, energy, Japan]
+    link: https://doi.org/10.1016/j.enpol.2019.111169
+  - short_title: "Sustainable space exploration"
+    title: "Sustainable space exploration and its relevance to the privatization of space ventures"
+    date: 2019-09-27
+    tags: [space, sustainability, policy]
+    link: https://doi.org/10.1016/j.actaastro.2019.09.037
+  - short_title: "Flood awareness mapping in Chile"
+    title: "Understanding community-level flooding awareness in remote coastal towns in northern Chile through community mapping"
+    date: 2019-06-13
+    tags: [flooding, community, mapping]
+    link: https://doi.org/10.3390/geosciences9070279
+  - short_title: "Tokyo low-emission building strategy"
+    title: "Tokyo's low-emission development strategies underlying the promotion of energy efficiency in public and private buildings"
+    date: 2018-07-14
+    tags: [energy-efficiency, urban-policy]
+    link: https://link.springer.com/chapter/10.1007/978-981-13-0782-9_10
+  - short_title: "Flood vulnerability and gender roles"
+    title: "Flood vulnerability, local perception and gender role judgment using multivariate analysis: A problem-based 'Participatory Action to Future Skill Management' to cope with flood impacts"
+    date: 2017-10-22
+    tags: [flooding, vulnerability, gender]
+    link: https://doi.org/10.1016/j.wace.2017.10.002

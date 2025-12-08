@@ -1,0 +1,8 @@
+{
+  "title": "Explainable AI Platform",
+  "cardTitle": "Explainable AI Platform",
+  "cardDescription": "Interactive XAI playground with narrated reasoning.",
+  "modalDescription": "Interactive XAI playground where models narrate their reasoning while you poke, drag, and generally prod them like a curious kid in a lab.",
+  "tags": ["#XAI", "#Python", "#Visualization"],
+  "link": "post.html?id=explainable-ai"
+}

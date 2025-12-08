@@ -1,6 +1,6 @@
 ---
 title: Energy Market Forecasting
-date: November 18, 2025
+date: August 8, 2025
 tags: "#Python #QuantEnergy #TimeSeries #XGBoost #Optuna #Backtesting #FeatureEngineering"
 ---
 
@@ -36,4 +36,6 @@ Because “just hedge it” isn’t a plan, and “the wind will probably blow�
 - Portfolio folks hedging exposure to intraday chaos.  
 - Anyone who prefers their PnL curve trending up and to the right.
 
-[View the code](https://github.com/nikolaosJP/Projects/tree/main/Energy-Market-Prediction)
+<div class="cta-wrapper">
+  <a class="cta-button" href="https://github.com/nikolaosJP/Projects/tree/main/Energy-Market-Prediction" target="_blank" rel="noopener noreferrer">View the code</a>
+</div>

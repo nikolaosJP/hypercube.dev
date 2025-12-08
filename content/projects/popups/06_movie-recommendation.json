@@ -1,8 +1,0 @@
-{
-  "title": "Movie Recommendation System",
-  "cardTitle": "Movie Recommendation System",
-  "cardDescription": "Neural collaborative filtering on MovieLens.",
-  "modalDescription": "Collaborative filtering engine using matrix factorization and neural networks on the MovieLens dataset. Provides personalized movie recommendations by learning user preferences and identifying similar viewing patterns across the user base.",
-  "tags": ["Neural Networks", "Collaborative Filtering", "Python"],
-  "link": "post.html?id=movie-recommendation"
-}
