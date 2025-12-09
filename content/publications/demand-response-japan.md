@@ -36,7 +36,7 @@ Households liked three programs most:
 
 Anything that promised savings got a thumbs-up. Anything that looked like work? Hard pass.
 
-Participants openly admitted they don’t mind shifting usage, *unless it costs time, comfort, or sanity* :contentReference[oaicite:1]{index=1}. If benefits felt too small or vague, interest tanked instantly.
+Participants openly admitted they don’t mind shifting usage, *unless it costs time, comfort, or sanity*. If benefits felt too small or vague, interest tanked instantly.
 
 ### 2. Complexity Kills  
 **Critical Peak Pricing (CPP)** was widely viewed as “mysterious and probably inconvenient,” scoring lower across the board. If the pricing structure felt like reading tax code, adoption probability dropped accordingly.
@@ -78,4 +78,3 @@ With the right design, DR stops being an inconvenience and starts looking like a
 <div class="cta-wrapper">
   <a class="cta-button" href="https://doi.org/10.3390/en14102795" target="_blank" rel="noopener noreferrer">View DOI</a>
 </div>
-
