@@ -554,11 +554,6 @@
                         <p>Paychecks made Ottawa ACs nap on cue.</p>
                         <div class="tech-stack-tags"><span class="tag">#demand-response</span><span class="tag">#energy</span></div>
                     </a>
-                    <a class="card-box" href="post.html?id=residential-demand-response-ontario" data-popup="residential-demand-response-ontario" onclick="openPublicationPopup('residential-demand-response-ontario', event, this)">
-                        <h3>Residential DR determinants in Ontario</h3>
-                        <p>Ontario experts draft grid plays like fantasy football.</p>
-                        <div class="tech-stack-tags"><span class="tag">#smart-grid</span><span class="tag">#demand-response</span></div>
-                    </a>
                 </div>
                 <div style="text-align: right;">
                     <a href="blog.html" class="view-all-btn">VIEW_ALL_PUBLICATIONS -></a>
@@ -659,12 +654,13 @@
                 </h2>
             </div>
             <div class="contact-wrapper">
-                <form onsubmit="event.preventDefault();">
-                    <input type="text" class="tui-input" placeholder="NAME" style="margin-bottom:1rem">
-                    <input type="email" class="tui-input" placeholder="EMAIL" style="margin-bottom:1rem">
-                    <textarea class="tui-input" rows="5" placeholder="MESSAGE" style="margin-bottom:1rem"></textarea>
+                <form onsubmit="sendEmail(event)">
+                    <input type="text" id="contact-name" class="tui-input" placeholder="NAME" style="margin-bottom:1rem" required>
+                    <input type="email" id="contact-email" class="tui-input" placeholder="EMAIL" style="margin-bottom:1rem" required>
+                    <textarea class="tui-input" id="contact-message" rows="5" placeholder="MESSAGE" style="margin-bottom:1rem" required></textarea>
                     <button class="tui-btn">SEND</button>
                 </form>
+                <div id="contact-status" style="margin-top:0.75rem; font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-muted);"></div>
             </div>
         </div>
     </section>
@@ -965,7 +961,6 @@
         const publicationPopupFiles = {
             'tale-two-florida-cities': 'flood-risk-perceptions-florida',
             'demand-response-ottawa': 'demand-response-ottawa',
-            'residential-demand-response-ontario': 'residential-dr-ontario',
             'social-life-of-stocks': 'social-life-of-stocks'
         };
 
@@ -1046,6 +1041,32 @@
 
         loadProjectPopups();
         loadPublicationPopups();
+
+        function sendEmail(event) {
+            event.preventDefault();
+            const name = document.getElementById('contact-name')?.value.trim() || 'Visitor';
+            const email = document.getElementById('contact-email')?.value.trim() || '';
+            const message = document.getElementById('contact-message')?.value.trim() || '';
+
+            const statusEl = document.getElementById('contact-status');
+            if (!name || !email || !message) {
+                if (statusEl) {
+                    statusEl.textContent = 'Please fill out name, email, and message.';
+                    statusEl.style.color = '#f87171';
+                }
+                return;
+            }
+
+            const subject = encodeURIComponent(`hypercube.dev contact from ${name}`);
+            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+            window.location.href = `mailto:nikosiliopoulos@outlook.com?subject=${subject}&body=${body}`;
+
+            if (statusEl) {
+                statusEl.textContent = 'Email draft opened. Please press send in your email client.';
+                statusEl.style.color = '#22c55e';
+                setTimeout(() => { statusEl.textContent = ''; }, 5000);
+            }
+        }
 
     </script>
 </body>

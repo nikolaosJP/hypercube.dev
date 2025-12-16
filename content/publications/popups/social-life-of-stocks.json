@@ -1,8 +1,8 @@
 {
-  "title": "The Social Life of Stocks: How Correlations Drive Portfolio Risk",
+  "title": "The Social Life of Stocks",
   "cardTitle": "The Social Life of Stocks",
-  "cardDescription": "Repairing portfolios with covariance-aware projection so correlation actually matters.",
-  "modalDescription": "Portfolios break when repairs ignore correlation. This piece walks through covariance-aware simplex projection—keeping cardinality constraints while steering weights toward sensible, risk-aware allocations.",
+  "cardDescription": "Keeping portfolios legal means keeping risk from quietly going off the rails.",
+  "modalDescription": "Most portfolio repairs pretend stocks live alone. They don’t. Stocks form friendships, rivalries, and move in packs, especially when markets get nervous. This piece looks at what happens when portfolio repair finally acknowledges that social life.",
   "tags": ["#investing", "#risk", "#optimization", "#quantfinance"],
   "link": "post.html?id=social-life-of-stocks"
 }
