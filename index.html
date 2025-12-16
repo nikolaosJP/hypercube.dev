@@ -654,10 +654,14 @@
                 </h2>
             </div>
             <div class="contact-wrapper">
-                <form onsubmit="sendEmail(event)">
-                    <input type="text" id="contact-name" class="tui-input" placeholder="NAME" style="margin-bottom:1rem" required>
-                    <input type="email" id="contact-email" class="tui-input" placeholder="EMAIL" style="margin-bottom:1rem" required>
-                    <textarea class="tui-input" id="contact-message" rows="5" placeholder="MESSAGE" style="margin-bottom:1rem" required></textarea>
+                <form id="contact-form" data-endpoint-encoded="aHR0cHM6Ly9mb3Jtc3ByZWUuaW8vZi9teXpycXlrYg==" method="POST" onsubmit="sendEmail(event)">
+                    <div style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">
+                        <label for="bot-field">Leave this field empty</label>
+                        <input type="text" id="bot-field" name="bot-field" tabindex="-1" autocomplete="off">
+                    </div>
+                    <input type="text" id="contact-name" name="name" class="tui-input" placeholder="NAME" style="margin-bottom:1rem" required>
+                    <input type="email" id="contact-email" name="email" class="tui-input" placeholder="EMAIL" style="margin-bottom:1rem" required>
+                    <textarea class="tui-input" id="contact-message" name="message" rows="5" placeholder="MESSAGE" style="margin-bottom:1rem" required></textarea>
                     <button class="tui-btn">SEND</button>
                 </form>
                 <div id="contact-status" style="margin-top:0.75rem; font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-muted);"></div>
@@ -1042,13 +1046,20 @@
         loadProjectPopups();
         loadPublicationPopups();
 
-        function sendEmail(event) {
+        async function sendEmail(event) {
             event.preventDefault();
-            const name = document.getElementById('contact-name')?.value.trim() || 'Visitor';
-            const email = document.getElementById('contact-email')?.value.trim() || '';
-            const message = document.getElementById('contact-message')?.value.trim() || '';
-
+            const form = document.getElementById('contact-form');
             const statusEl = document.getElementById('contact-status');
+            const name = document.getElementById('contact-name')?.value.trim();
+            const email = document.getElementById('contact-email')?.value.trim();
+            const message = document.getElementById('contact-message')?.value.trim();
+            const botField = document.getElementById('bot-field')?.value.trim();
+
+            // basic honeypot
+            if (botField) {
+                return;
+            }
+
             if (!name || !email || !message) {
                 if (statusEl) {
                     statusEl.textContent = 'Please fill out name, email, and message.';
@@ -1057,14 +1068,34 @@
                 return;
             }
 
-            const subject = encodeURIComponent(`hypercube.dev contact from ${name}`);
-            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
-            window.location.href = `mailto:nikosiliopoulos@outlook.com?subject=${subject}&body=${body}`;
-
+            // decode the endpoint at runtime to reduce static scraping
+            const encoded = form.getAttribute('data-endpoint-encoded');
+            const endpoint = encoded ? atob(encoded) : '';
             if (statusEl) {
-                statusEl.textContent = 'Email draft opened. Please press send in your email client.';
+                statusEl.textContent = 'Sending...';
                 statusEl.style.color = '#22c55e';
-                setTimeout(() => { statusEl.textContent = ''; }, 5000);
+            }
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: new FormData(form)
+                });
+
+                if (!res.ok) throw new Error('Send failed');
+
+                if (statusEl) {
+                    statusEl.textContent = 'Message sent!';
+                    statusEl.style.color = '#22c55e';
+                }
+                form.reset();
+            } catch (err) {
+                console.error(err);
+                if (statusEl) {
+                    statusEl.textContent = 'Failed to send. Please try again or contact me directly at nikosiliopoulos@outlook.com.';
+                    statusEl.style.color = '#f87171';
+                }
             }
         }
 

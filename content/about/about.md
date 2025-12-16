@@ -23,7 +23,7 @@ When I'm not designing algorithms, I am:
 ## Contact
 Feel free to drop me an email or reach out on any of my socials.
 
-Email: nikolaos.iliopo@gmail.com<br>
+Email: nikosiliopoulos@outlook.com<br>
 [GitHub](https://github.com/nikolaosJP)<br>
 [Linkedin](https://www.linkedin.com/in/nickiliopoulos)
 
