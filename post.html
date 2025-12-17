@@ -298,20 +298,20 @@
 
         /* Responsive tweaks */
         @media (max-width: 1100px) {
-            .post-wrapper { grid-template-columns: 200px 1fr; grid-template-areas: "left main" "left toc"; gap: 2rem; }
-            .left-sidebar { grid-area: left; position: sticky; top: 120px; }
+            .post-wrapper { grid-template-columns: 1fr; grid-template-areas: "main" "toc"; gap: 1.5rem; }
+            .left-sidebar { display: none; }
             article { grid-area: main; }
-            .right-sidebar { grid-area: toc; position: static; margin-top: -1rem; }
+            .right-sidebar { grid-area: toc; position: static; margin-top: 0; }
         }
         @media (max-width: 1000px) {
             body { font-size: 0.98rem; }
             .post-wrapper { grid-template-columns: 1fr; gap: 1.25rem; padding: 0 1rem; }
             nav { position: sticky; top: 0; }
             nav .container { padding: 0 1rem; }
-            .left-sidebar, .right-sidebar { position: static; display: block; }
+            .left-sidebar { display: none; }
+            .right-sidebar { position: static; display: block; }
             .post-wrapper > article { order: 1; }
             .post-wrapper > .right-sidebar { order: 2; }
-            .post-wrapper > .left-sidebar { order: 3; }
             .right-sidebar { margin-top: 0; }
             .post-meta { flex-wrap: wrap; gap: 10px; }
         }
