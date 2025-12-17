@@ -309,8 +309,8 @@
         .view-all-btn { display: inline-block; margin-top: 1.5rem; font-family: var(--font-mono); font-size: .9rem; color: var(--terminal-green); border-bottom: 1px solid transparent; }
         .view-all-btn:hover { border-bottom-color: var(--terminal-green); }
         .contact-wrapper { max-width: 600px; margin: 0 auto; background: #0a0a0a; border: 1px solid var(--border-color); padding: 2rem; border-radius: 4px; }
-        .contact-intro { margin: 0 0 1.25rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.95rem; line-height: 1.5; }
-        .contact-social { display: flex; gap: 0.75rem; margin: 0 0 0.75rem; }
+        .contact-intro { margin: 0 0 0.75rem; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.95rem; line-height: 1.5; }
+        .contact-social { display: flex; gap: 0.75rem; margin: 0 0 1.25rem; }
         .contact-social a {
             width: 38px;
             height: 38px;
@@ -758,6 +758,7 @@
                 </h2>
             </div>
             <div class="contact-wrapper">
+                <p class="contact-intro">Say hi. Worst case: you get a polite reply. Best case: we build something weird and useful.</p>
                 <div class="contact-social" aria-label="Social links">
                     <a href="https://github.com/nikolaosJP" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -770,7 +771,6 @@
                         </svg>
                     </a>
                 </div>
-                <p class="contact-intro">Say hi. Worst case: you get a polite reply. Best case: we build something weird and useful.</p>
                 <form id="contact-form" data-endpoint-encoded="aHR0cHM6Ly9mb3Jtc3ByZWUuaW8vZi9teXpycXlrYg==" method="POST" onsubmit="sendEmail(event)">
                     <div style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">
                         <label for="bot-field">Leave this field empty</label>
