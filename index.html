@@ -47,7 +47,7 @@
             --font-sans: 'Inter', sans-serif;
         }
         * { box-sizing: border-box; outline: none; }
-        html { scroll-behavior: smooth; overflow-y: scroll; scrollbar-gutter: stable; overscroll-behavior-y: contain; }
+        html { scroll-behavior: smooth; overflow-y: scroll; scrollbar-gutter: stable; overscroll-behavior-y: contain; font-size: clamp(15px, 0.9vw + 13px, 17px); }
         body { margin: 0; padding: 0; background: var(--bg-black) radial-gradient(var(--grid-color) 1px, transparent 1px); background-size: var(--grid-size) var(--grid-size); color: var(--text-main); font-family: var(--font-sans); overflow-x: hidden; }
         .section-wrapper { width: 100%; padding: 6rem 0; border-bottom: 1px solid #1a1a1a; background: radial-gradient(var(--grid-color) 1px, transparent 1px); background-size: var(--grid-size) var(--grid-size); }
         .bg-black { background-color: var(--bg-black); }
@@ -81,6 +81,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
         }
         .logo {
             font-family: var(--font-mono);
@@ -110,8 +111,44 @@
         .nav-links span:hover {
             color: var(--terminal-green);
         }
-        @media (max-width: 768px) {
+        .nav-toggle {
+            display: none;
+            background: #0c0c0c;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 0.55rem 0.85rem;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
+        }
+        .nav-toggle:hover { border-color: var(--terminal-green); color: var(--terminal-green); }
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(6px);
+            z-index: 120;
+            padding: 90px 1.5rem 2rem 1.5rem;
+        }
+        .mobile-menu.open { display: block; }
+        .mobile-menu ul { list-style: none; padding: 0; margin: 0; }
+        .mobile-menu li { margin-bottom: 1rem; }
+        .mobile-menu a {
+            display: block;
+            padding: 0.95rem 1rem;
+            border: 1px solid #1a1a1a;
+            border-radius: 10px;
+            background: rgba(20, 20, 20, 0.85);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+        }
+        .mobile-menu a:hover { border-color: var(--terminal-green); color: var(--terminal-green); }
+        @media (max-width: 900px) {
             .nav-links { display: none; }
+            .nav-toggle { display: inline-flex; align-items: center; gap: 6px; }
         }
         /* ============================================ */
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
@@ -219,6 +256,17 @@
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
         .skills-wrapper { display: flex; gap: 20px; font-family: var(--font-mono); min-height: 450px; align-items: stretch; }
         .skills-sidebar { width: 260px; background: var(--sidebar-bg); border: 1px solid var(--panel-border); border-radius: 8px; display: flex; flex-direction: column; flex-shrink: 0; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+        .skill-picker { display: none; width: 100%; margin-bottom: 1rem; }
+        .skill-select {
+            width: 100%;
+            background: #0e0e0e;
+            border: 1px solid #333;
+            color: var(--text-main);
+            padding: 0.85rem 0.9rem;
+            font-family: var(--font-mono);
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
         .panel-header { height: 40px; background: var(--panel-header); border-bottom: 1px solid rgba(255,255,255,.05); display: flex; align-items: center; padding: 0 15px; gap: 8px; flex-shrink: 0; }
         .sidebar-title { margin: 0 auto; font-size: .8rem; color: var(--sidebar-text); opacity: .7; }
         .sidebar-content { padding: 10px 0; flex: 1; }
@@ -250,12 +298,10 @@
         .tui-btn:hover { background: var(--terminal-green); }
         @media (max-width: 768px) {
             .skills-wrapper { flex-direction: column; }
-            .skills-sidebar { width: 100%; overflow-x: auto; flex-direction: row; }
-            .sidebar-content { display: flex; }
-            .file-item { border-left: none; border-bottom: 2px solid transparent; }
-            .file-item.active { border-left: none; border-bottom-color: var(--terminal-green); }
-            .nav-links { display: none; }
-            h1 { font-size: 2.5rem; }
+            .skills-sidebar { display: none; }
+            .skill-picker { display: block; }
+            .skills-code-window { width: 100%; }
+            h1 { font-size: 2.35rem; }
             .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
             .hero-wrapper .terminal-window { width: 100%; max-width: 100%; margin-left: 0; margin-right: 0; }
         }
@@ -440,8 +486,20 @@
                 <a href="index.html#skills" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Skills</a>
                 <a href="index.html#contact" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Contact</a>
             </div>
+            <button class="nav-toggle" id="nav-toggle">Menu</button>
         </div>
     </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <ul>
+            <li><a href="index.html">Terminal</a></li>
+            <li><a href="post.html?id=about">About</a></li>
+            <li><a href="projects-blog.html">Projects</a></li>
+            <li><a href="blog.html">Publications</a></li>
+            <li><a href="index.html#skills">Skills</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </div>
 
     <section class="section-wrapper bg-black hero-wrapper">
         <div class="container">
@@ -568,6 +626,17 @@
                 <h2 class="section-title" onmouseenter="handleTitleEnter(this)" onmouseleave="handleTitleLeave(this)">
                     <span class="title-prefix">//</span> Tech Stack <span class="cursor-block"></span>
                 </h2>
+            </div>
+
+            <div class="skill-picker">
+                <select class="skill-select" id="skill-picker">
+                    <option value="backend">Backend</option>
+                    <option value="ai">AI &amp; Machine Learning</option>
+                    <option value="cloud">Cloud, DevOps &amp; DBs</option>
+                    <option value="frontend">Frontend &amp; Extensions</option>
+                    <option value="automation">Automation &amp; Scripting</option>
+                    <option value="tools">Tools</option>
+                </select>
             </div>
             
             <div class="skills-wrapper">
@@ -729,6 +798,23 @@
         window.handleNavEnter = handleNavEnter;
         window.handleNavLeave = handleNavLeave;
 
+        // Mobile nav toggle
+        (function setupMobileMenu() {
+            const toggle = document.getElementById('nav-toggle');
+            const menu = document.getElementById('mobile-menu');
+            if (!toggle || !menu) return;
+            const closeMenu = () => menu.classList.remove('open');
+            toggle.addEventListener('click', () => {
+                menu.classList.toggle('open');
+            });
+            menu.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') closeMenu();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeMenu();
+            });
+        })();
+
         const skills = {
             backend: { file: "backend.json", icon: `<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#22c55e" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>`, content: `<span class="s-c">/* Data-first services for quant and AI workloads. */</span>
 
@@ -824,6 +910,10 @@
                 skillElements.skillIcon = document.getElementById('skill-icon');
                 skillElements.skillOutput = document.getElementById('skill-output');
                 skillElements.fileItems = document.querySelectorAll('.file-item');
+                const picker = document.getElementById('skill-picker');
+                if (picker) {
+                    picker.addEventListener('change', (evt) => renderSkill(evt.target.value));
+                }
             }
 
             if (el && skillElements.fileItems) {
