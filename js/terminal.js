@@ -162,26 +162,23 @@ Try: help to list available commands, or simply say something to communicate wit
             id: 'hats10',
             title: 'The Hat Line (10 Prisoners)',
             category: 'Logic / Deduction',
-            prompt: `• 10 prisoners are marched into a hallway and lined up single-file like the world’s least fun conga line. A guard walks down the row
-  and drops a hat on each head. The hats come in exactly two colors: red and blue. That’s it. No “maybe teal.” No “I’m colorblind,
-  your honor.” Just red or blue, because the universe loves binary choices when your life depends on them.
+            prompt: `• 10 prisoners are marched into a hallway and lined up single-file like the world’s least fun conga line. A guard walks down the row and drops a hat on each head. The hats come in exactly two colors: red and blue. That’s it. No “maybe teal.” No “I’m colorblind, your honor.” Just red or blue, because the universe loves binary choices when your life depends on them.
 
-  Here’s the setup:
+Here’s the setup:
 
-  - Everyone faces forward, so you can only see hats in front of you.
-  - Prisoner #1 (at the very back) can see 9 hats.
-  - Prisoner #2 can see 8 hats.
-  - …
-  - Prisoner #10 (at the front) sees 0 hats, which is very on-brand for being last in line: no information, but still fully judged.
-  - Nobody can see their own hat.
-  - Starting with #1 and moving forward, each prisoner must say exactly one word: “red” or “blue.”
-  - Everyone hears everything that’s said.
-  - Guess right: live. Guess wrong: die.
-  - Before the hats go on, the prisoners are allowed to agree on a strategy, like a doomed fantasy football league.
+- Everyone faces forward, so you can only see hats in front of you.
+- Prisoner #1 (at the very back) can see 9 hats.
+- Prisoner #2 can see 8 hats.
+- …
+- Prisoner #10 (at the front) sees 0 hats, which is very on-brand for being last in line: no information, but still fully judged.
+- Nobody can see their own hat.
+- Starting with #1 and moving forward, each prisoner must say exactly one word: “red” or “blue.”
+- Everyone hears everything that’s said.
+- Guess right: live. Guess wrong: die.
+- Before the hats go on, the prisoners are allowed to agree on a strategy, like a doomed fantasy football league.
 
-  The question is:
-
-  Can they come up with a strategy that guarantees at least 9 of them survive, no matter how the hats are assigned?
+The question is:
+Can they come up with a strategy that guarantees at least 9 of them survive, no matter how the hats are assigned?
 
 Commands: help, hint, reveal, quit`,
             hint: `Hint: Prisoner #1 can "sacrifice" their guess to transmit 1 bit of information to everyone else.
