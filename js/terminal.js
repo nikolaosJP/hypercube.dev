@@ -189,6 +189,26 @@ If the first prisoner says “red,” that means an odd number of red hats lies 
 
 Thus, no matter how the hats are assigned, at least nine prisoners live.`,
             // No automatic grading; this is a hint/reveal style riddle.
+        },
+        blueeyes: {
+            id: 'blueeyes',
+            title: 'Blue Eyes Island',
+            category: 'Logic / Common Knowledge',
+            prompt: `A group of people with assorted eye colors live on an island. They are perfect logicians, but no one knows the color of their own eyes. Everyone can see everyone else’s eye color, but they cannot communicate. Every night at midnight, a ferry arrives. Anyone who has deduced their own eye color must leave the island. On this island there are 100 blue-eyed people and 100 brown-eyed people, though no one knows these totals. So any given blue-eyed person can see 100 people with brown eyes and 99 people with blue eyes, but that does not tell him his own eye color; as far as he knows the totals could be 101 brown and 99 blue. Or 100 brown, 99 blue, and he could have red eyes. One day, a traveler visits and makes a single public announcement: “I can see someone who has blue eyes.” The traveler then leaves.
+
+The question is:
+Who leaves the island, and on which night?
+
+Commands: help, hint, reveal, quit`,
+            hint: `Hint: Work from small N (1, 2, 3...) and watch how the public announcement creates common knowledge.`,
+            solution: `To simplify the logic, start with 4 people: 2 blue-eyed and 2 brown-eyed (and in general, eye colors could be anything).
+
+After the traveler says, “I can see someone with blue eyes,” each blue-eyed person sees exactly one blue-eyed person. Each reasons: If I weren’t blue, there would be only 1 blue-eyed person total, and that person would see zero blue eyes and therefore leave on Night 1. But Night 1 passes and nobody leaves, so that possibility is eliminated. Both blue-eyed people conclude they must be blue, and they leave on Night 2. The brown-eyed people stay, because learning “I’m not blue” does not uniquely identify their color when other colors are possible.
+
+Now generalize. If there are N blue-eyed people, each blue-eyed person sees N−1 blue-eyed people and uses the same chain of reasoning: if there were only N−1, they would leave on Night N−1; when that does not happen, N must be correct. Therefore, all N blue-eyed people leave on Night N.
+
+In the original problem, N = 100, so all 100 blue-eyed people leave on Night 100, and the 100 brown-eyed people remain.`,
+            // No automatic grading; this is a hint/reveal style riddle.
         }
     };
 
@@ -347,8 +367,10 @@ Theme: ${terminalWindow?.dataset.termTheme || "matrix"}`
         riddles: () => (
 `Riddles:
   - riddle hats10  (${riddleBank.hats10.category}) — ${riddleBank.hats10.title}
+  - riddle blueeyes  (${riddleBank.blueeyes.category}) — ${riddleBank.blueeyes.title}
 
-Run: riddle hats10`
+Run: riddle hats10
+Or:  riddle blueeyes`
         ),
         riddle: (args) => {
             const id = (args[1] || '').trim();
