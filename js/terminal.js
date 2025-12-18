@@ -134,6 +134,8 @@ Standard Commands:
   help          - Display this help message
   theme [style] - Change terminal theme (matrix, midnight, retro, hacker)
   games         - List available console games
+  riddles       - List available riddles
+  riddle [id]   - Start a riddle (ex: riddle hats10)
   yatmal [text] - Rooftop rant of legend
   projects      - List the actual projects built by hyperkube
   publications  - List recent publications
@@ -181,7 +183,7 @@ Try: help to list available commands, or simply say something to communicate wit
 
   Can they come up with a strategy that guarantees at least 9 of them survive, no matter how the hats are assigned?
 
-Type your solution (free-text) or commands: hint, reveal, quit`,
+Type your solution (free-text) or commands: help, hint, reveal, quit`,
             hint: `Hint: Prisoner #1 can "sacrifice" their guess to transmit 1 bit of information to everyone else.
 Think: odd/even (parity) of a color count.`,
             solution: `Solution (guarantees 9 survivors):
@@ -227,7 +229,7 @@ Result: Prisoner #1 might die, but prisoners #2–#10 all know their hat color w
         if (activeRiddleSession) return 'A riddle is already running. Type quit to exit it.';
 
         enterGameMode();
-        activeRiddleSession = { riddleId, solved: false };
+        activeRiddleSession = { riddleId, solved: false, attempts: 0 };
         return `${riddle.title}
 Category: ${riddle.category}
 
@@ -245,6 +247,9 @@ ${riddle.prompt}`;
         const lower = input.toLowerCase();
         if (!input) return null;
 
+        if (lower === 'help') {
+            return `Commands: hint, reveal, quit\nSubmit: type your strategy in plain English.`;
+        }
         if (lower === 'quit' || lower === 'exit') {
             stopActiveRiddleSession();
             return 'Exited riddles.';
@@ -257,12 +262,28 @@ ${riddle.prompt}`;
             return riddle.solution;
         }
 
-        const grade = riddle.grader(input);
-        const verdict = grade.correct ? 'Correct.' : 'Not quite.';
-        const why = `Checks: parity=${grade.checks.hasParity ? 'yes' : 'no'}, #1=${grade.checks.mentionsFirst ? 'yes' : 'no'}, count+color=${grade.checks.mentionsCountColor ? 'yes' : 'no'}, deduce=${grade.checks.mentionsDeduce ? 'yes' : 'no'}`;
+        if (activeRiddleSession.solved) {
+            return `Already solved. Type 'reveal' for the full solution, or 'quit' to exit.`;
+        }
 
-        stopActiveRiddleSession();
-        return `${verdict}\n${why}\n\n${riddle.solution}`;
+        activeRiddleSession.attempts += 1;
+        const grade = riddle.grader(input);
+
+        const missing = [];
+        if (!grade.checks.hasParity) missing.push('parity/odd-even bit');
+        if (!grade.checks.mentionsFirst) missing.push('prisoner #1 sends the bit');
+        if (!grade.checks.mentionsCountColor) missing.push('count hats ahead + color');
+        if (!grade.checks.mentionsDeduce) missing.push('others deduce own hat');
+
+        if (grade.correct) {
+            activeRiddleSession.solved = true;
+            return `Correct.\nType 'reveal' to see the canonical solution, or 'quit' to exit.`;
+        }
+
+        const nextHint = missing.length
+            ? `Missing piece(s): ${missing.join(', ')}.`
+            : `Close, but missing a key detail.`;
+        return `Not quite.\n${nextHint}\nTry again, or type 'hint'.`;
     }
 
     const cmds = {
