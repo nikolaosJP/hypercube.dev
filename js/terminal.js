@@ -160,7 +160,7 @@ Try: help to list available commands, or simply say something to communicate wit
     const riddleBank = {
         hats10: {
             id: 'hats10',
-            title: 'The Hat Line (10 Prisoners)',
+            title: 'The Hat Line',
             category: 'Logic / Deduction',
             prompt: `Ten prisoners are lined up in a hallway, all facing forward. One by one, a guard places a hat on each head. Every hat is either red or blue. There are no mirrors, no reflections, and no way for anyone to see their own hat.
 
@@ -212,7 +212,7 @@ In the original problem, N = 100, so all 100 blue-eyed people leave on Night 100
         },
         boolos: {
             id: 'boolos',
-            title: 'The Hardest Logic Puzzle Ever (Boolos)',
+            title: 'The Hardest Logic Puzzle Ever',
             category: 'Logic / Deduction',
             prompt: `There are three beings—call them A, B, and C. Each is exactly one of:
 
@@ -226,7 +226,7 @@ You may ask exactly three yes/no questions total, directed to any one being per 
 
 Goal: Determine which being is True, which is False, and which is Random, within those three questions.
 
-(This is Boolos’ famous puzzle, commonly called “The Hardest Logic Puzzle Ever.”)
+This is Boolos’ famous puzzle, commonly called “The Hardest Logic Puzzle Ever.”
 
 Commands: help, hint, reveal, quit`,
             hint: `Hint: Use a “universal translator” question form that cancels out truth/lie AND the unknown meaning of “da/ja”, like:
@@ -414,9 +414,9 @@ Theme: ${terminalWindow?.dataset.termTheme || "matrix"}`
         ),
         riddles: () => (
 `Riddles:
-  - riddle hats10  (${riddleBank.hats10.category}) — ${riddleBank.hats10.title}
-  - riddle blueeyes  (${riddleBank.blueeyes.category}) — ${riddleBank.blueeyes.title}
-  - riddle boolos  (${riddleBank.boolos.category}) — ${riddleBank.boolos.title}
+  - riddle hats10 — ${riddleBank.hats10.title}
+  - riddle blueeyes — ${riddleBank.blueeyes.title}
+  - riddle boolos — ${riddleBank.boolos.title}
 `
         ),
         riddle: (args) => {
