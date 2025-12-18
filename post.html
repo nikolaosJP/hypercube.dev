@@ -321,10 +321,6 @@
             .left-sidebar { display: none; }
             article { grid-area: main; }
             .right-sidebar { grid-area: toc; position: static; margin-top: 0; }
-
-            /* Projects/Publications: TOC at page end is not useful on mobile */
-            body[data-post-category="projects"] .right-sidebar,
-            body[data-post-category="publications"] .right-sidebar { display: none; }
         }
         @media (max-width: 1000px) {
             body { font-size: 0.98rem; }
@@ -342,6 +338,10 @@
             .container { padding: 0 1rem; }
             h1 { margin-bottom: 0.75rem; }
             pre { padding: 1.1rem; }
+
+            /* Projects/Publications: TOC at page end is not useful on mobile */
+            body[data-post-category="projects"] .right-sidebar,
+            body[data-post-category="publications"] .right-sidebar { display: none; }
         }
         @media (max-width: 560px) {
             .post-wrapper { margin: 90px auto 3rem auto; padding: 0 0.75rem; }
