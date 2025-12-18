@@ -9,7 +9,7 @@ Welcome to my little corner of the universe, where I poke at market microstructu
 
 Every drawing you see here was hand-drawn by me. I am not an artist. At all. Some of these drawings may in fact be crimes. But they get the point across, and that’s what matters… probably.
 
-## The Person
+## The Person Behind the Terminal
 I am a Tokyo-based Research Scientist. I pivoted from a PhD in Sustainability Science to high-frequency trading, swapping energy grid optimization for market microstructure analysis. These days, I am building algorithms that operate so fast they technically live in the future. They analyze microstructure, decide what to trade, and quietly judge human reaction times.
 
 When I'm not designing algorithms, I am:
