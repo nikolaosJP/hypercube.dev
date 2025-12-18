@@ -368,9 +368,7 @@ Theme: ${terminalWindow?.dataset.termTheme || "matrix"}`
 `Riddles:
   - riddle hats10  (${riddleBank.hats10.category}) — ${riddleBank.hats10.title}
   - riddle blueeyes  (${riddleBank.blueeyes.category}) — ${riddleBank.blueeyes.title}
-
-Run: riddle hats10
-Or:  riddle blueeyes`
+`
         ),
         riddle: (args) => {
             const id = (args[1] || '').trim();
