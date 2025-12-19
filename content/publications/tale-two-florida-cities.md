@@ -14,7 +14,7 @@ This study compares two coastal neighborhoods that technically share the same cl
 - **Hyde Park (Tampa):** Flooding happens, but it’s approached as a low-urgency concern, something to monitor, not something that dominates daily life.  
 - **Saint Augustine:** Flooding happens often enough that residents treat it like an irritating seasonal guest.
 
-To test how future conditions shape preferences, residents were split into two groups. One saw a gentle, manageable future water level. The other saw a four foot scenario that basically suggests investing in stilts. The results were rather predictable; the closer the water gets to your living room, the louder the calls for action become
+To test how future conditions shape preferences, residents were split into two groups. One saw a gentle, manageable future water level. The other saw a four foot scenario that basically suggests investing in stilts. The results were rather predictable; the closer the water gets to your living room, the louder the calls for action become.
 
 ## What Residents Actually Think  
 The two communities rated the same problem very differently.  
