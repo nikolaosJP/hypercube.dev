@@ -11,10 +11,10 @@ publication_url: https://doi.org/10.1007/s11027-024-10129-1
 
 ## The Setup  
 This study compares two coastal neighborhoods that technically share the same climate but emotionally live on different planets.  
-- **Hyde Park (Tampa):** Flooding is mostly hypothetical, like worrying about a shark attack while standing in a kiddie pool.  
+- **Hyde Park (Tampa):** Flooding happens, but it’s approached as a low-urgency concern, something to monitor, not something that dominates daily life.  
 - **Saint Augustine:** Flooding happens often enough that residents treat it like an irritating seasonal guest.
 
-To test how future conditions shape preferences, residents were split into two groups. One saw a gentle, manageable future water level. The other saw a four foot scenario that basically suggests investing in stilts. The results were predictable in the best way. Bigger water meant bigger demands for action.
+To test how future conditions shape preferences, residents were split into two groups. One saw a gentle, manageable future water level. The other saw a four foot scenario that basically suggests investing in stilts. The results were rather predictable; the closer the water gets to your living room, the louder the calls for action become
 
 ## What Residents Actually Think  
 The two communities rated the same problem very differently.  
