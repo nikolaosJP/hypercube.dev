@@ -4,5 +4,5 @@
   "cardDescription": "Turns relocation fantasies into actual expense spreadsheets.",
   "modalDescription": "Fetches Numbeo data on rent, groceries, transport, and utilities for whatever city you’ve decided will fix your life. Stores everything in a clean Parquet file, then lines cities up for comparison, usually revealing that your “cheap escape” becomes less cheap once you account for your lifestyle and bandwidth requirements.",
   "tags": ["#WebScraping", "#Python", "#Data", "#Automation"],
-  "link": "/post/?id=cost-of-living-scraper"
+  "link": "post.html?id=cost-of-living-scraper"
 }

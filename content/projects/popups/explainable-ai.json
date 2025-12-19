@@ -4,5 +4,5 @@
   "cardDescription": "ML models that actually explain their reasoning out loud.",
   "modalDescription": "Fit your model of choice, whether it’s a linear classifier, a forest, or a neural net, then nudge the inputs and watch the boundary reshape instantly. Instead of taking the algorithm’s word for it, you get visual proof you can actually challenge; no PhD needed.",
   "tags": ["#XAI", "#Python", "#Visualization"],
-  "link": "/post/?id=explainable-ai"
+  "link": "post.html?id=explainable-ai"
 }

@@ -4,5 +4,5 @@
   "cardDescription": "Translates IBKR chaos into clean rebalancing math.",
   "modalDescription": "Ingests IBKR CSVs, normalizes trades, FX, dividends, taxes, and deposits, computes cost basis and time-weighted returns, plots per-symbol P&L, then hands you a rebalancing shopping list based on targets and cash.",
   "tags": ["#Python", "#QuantFinance", "#PortfolioAnalytics"],
-  "link": "/post/?id=portfolio-tracker"
+  "link": "post.html?id=portfolio-tracker"
 }

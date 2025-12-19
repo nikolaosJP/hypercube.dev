@@ -1,6 +1,6 @@
 # Content
 
-Organized by category: `about/`, `projects/`, `publications/`
+Organized by category: `about/`, `projects/`, `blog/`
 
 ## Adding a Post
 
@@ -18,4 +18,4 @@ tags: "#Tag1 #Tag2"
 Your content here...
 ```
 
-Access at `/post/?id=filename` (without category or extension)
+Access at `post.html?id=filename` (without category or extension)

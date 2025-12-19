@@ -1,14 +1,1068 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Redirecting…</title>
-  <meta http-equiv="refresh" content="0; url=/post/" />
-  <script>
-    location.replace('/post/' + location.search + location.hash);
-  </script>
-</head>
-<body></body>
-</html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post // hyperkube.dev</title>
 
+    <!-- Performance optimizations -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" as="script">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;600;700&display=block" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-black: #050505;
+            --grid-size: 20px;
+            --grid-color: rgba(34, 197, 94, 0.11);
+
+            --terminal-green: #22c55e;
+            --text-main: #e5e5e5;
+            --text-muted: #888;
+            --border-color: #333;
+            --font-mono: 'Fira Code', monospace;
+            --font-sans: 'Inter', sans-serif;
+            --max-width: 1400px;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; overflow-y: scroll; scrollbar-gutter: stable; overscroll-behavior-y: contain; font-size: clamp(15px, 0.9vw + 13px, 17px); }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-black);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.8;
+            background-size: var(--grid-size) var(--grid-size);
+            background-image: radial-gradient(var(--grid-color) 1px, transparent 1px);
+        }
+
+        a { text-decoration: none; color: inherit; transition: color 0.2s; }
+        a:hover { color: var(--terminal-green); }
+        .green { color: var(--terminal-green); }
+
+        /* ============================================
+           NAVIGATION - MUST BE IDENTICAL ON ALL PAGES
+           ============================================ */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.2rem 0;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(4px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 100;
+            line-height: 1;
+        }
+        nav .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .nav-links a {
+            transition: color 0.2s;
+            color: var(--text-muted);
+        }
+        .nav-links a:hover {
+            color: var(--terminal-green);
+        }
+        .nav-links span {
+            cursor: pointer;
+            transition: color 0.2s;
+            color: var(--text-muted);
+        }
+        .nav-links span:hover {
+            color: var(--terminal-green);
+        }
+        .nav-toggle {
+            display: none;
+            background: #0c0c0c;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            width: 42px;
+            height: 38px;
+            padding: 0;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-toggle:hover { border-color: var(--terminal-green); color: var(--terminal-green); }
+        .hamburger {
+            width: 18px;
+            height: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .hamburger span {
+            height: 2px;
+            width: 100%;
+            background: currentColor;
+            border-radius: 2px;
+        }
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(6px);
+            z-index: 120;
+            padding: 90px 1.5rem 2rem 1.5rem;
+        }
+        .mobile-menu.open { display: block; }
+        .mobile-menu ul { list-style: none; padding: 0; margin: 0; }
+        .mobile-menu li { margin-bottom: 1rem; }
+        .mobile-menu a {
+            display: block;
+            padding: 0.9rem 1rem;
+            border: 1px solid #1a1a1a;
+            border-radius: 10px;
+            background: rgba(20, 20, 20, 0.85);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+        }
+        .mobile-menu a:hover { border-color: var(--terminal-green); color: var(--terminal-green); }
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .nav-toggle { display: inline-flex; }
+        }
+        /* ============================================ */
+
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 2rem; }
+
+        .post-wrapper {
+            max-width: var(--max-width);
+            margin: 120px auto 4rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 200px 1fr 240px;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        /* LEFT SIDEBAR NAV */
+        .left-sidebar { position: sticky; top: 120px; font-family: var(--font-mono); font-size: 0.9rem; }
+
+        .about-widget { margin-bottom: 1.5rem; }
+        .about-title { font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem; display: block; }
+        .about-text { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; font-family: var(--font-sans); }
+
+        .nav-separator { border: none; height: 1px; background: #222; margin: 1.5rem 0; }
+
+        .nav-list { list-style: none; padding: 0; margin: 0; }
+        .nav-list li { margin-bottom: 0.8rem; }
+        .nav-list a { color: var(--text-muted); display: block; transition: transform 0.2s, color 0.2s; font-size: 0.9rem; }
+        .nav-list a:hover { color: var(--text-main); transform: translateX(3px); }
+
+        /* RIGHT SIDEBAR TOC */
+        .right-sidebar { position: sticky; top: 120px; }
+        .toc-title { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+        .toc-list { list-style: none; padding: 0; margin: 0; border-left: 1px solid #222; }
+        .toc-list ul { list-style: none; padding: 0; margin: 0; }
+        .toc-item { display: block; padding: 5px 0 5px 20px; font-size: 0.85rem; color: var(--text-muted); border-left: 2px solid transparent; margin-left: -1px; transition: color 0.2s, border-color 0.2s; }
+        .toc-item:hover { color: var(--terminal-green); }
+        .toc-item.active { color: var(--terminal-green); border-left-color: var(--terminal-green); font-weight: 600; }
+        .toc-subitem { display: block; padding: 4px 0 4px 35px; font-size: 0.8rem; color: var(--text-muted); border-left: 2px solid transparent; margin-left: -1px; transition: color 0.2s, border-color 0.2s; font-family: var(--font-sans); }
+        .toc-subitem:hover { color: var(--terminal-green); }
+        .toc-subitem.active { color: var(--terminal-green); border-left-color: var(--terminal-green); }
+
+        /* ARTICLE CONTENT */
+        article { min-width: 0; }
+        .post-header { margin-bottom: 3rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; line-height: 1.2; letter-spacing: -1px; font-weight: 800; }
+        .post-meta { font-family: var(--font-mono); color: var(--text-muted); font-size: 0.9rem; display: flex; gap: 20px; }
+
+        section { scroll-margin-top: 120px; }
+        h2, h3 { margin-top: 3rem; font-family: var(--font-mono); font-size: 1.6rem; display: flex; align-items: center; gap: 10px; scroll-margin-top: 120px; user-select: none; cursor: default; }
+        h2 .heading-prefix, h3 .heading-prefix { color: var(--terminal-green); font-size: 1.2rem; }
+
+        h4 { margin-top: 2rem; font-family: var(--font-mono); font-size: 1.2rem; color: var(--text-main); scroll-margin-top: 100px; }
+
+        p { color: #ccc; font-size: 1.05rem; margin-bottom: 1.5rem; }
+
+        ul, ol { color: #ccc; font-size: 1.05rem; margin-bottom: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+
+        #post-content img {
+            max-width: 100%;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 2rem auto;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            cursor: zoom-in;
+        }
+
+        .image-lightbox-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 1.5rem;
+            z-index: 120;
+            overflow: hidden;
+        }
+        .image-lightbox-backdrop.scrollable { overflow: auto; }
+        .image-lightbox-content {
+            position: relative;
+            max-width: none;
+            max-height: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+            overflow: visible;
+        }
+        .image-lightbox-content img {
+            width: auto;
+            height: auto;
+            max-width: none;
+            max-height: none;
+            object-fit: contain;
+            border-radius: 12px;
+            border: 1px solid #222;
+            display: block;
+            background: #0b0b0b;
+            cursor: zoom-in;
+            will-change: transform;
+        }
+        .image-lightbox-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(15, 15, 15, 0.85);
+            color: #f5f5f5;
+            border: 1px solid #2f2f2f;
+            border-radius: 12px;
+            padding: 6px 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+        }
+        .image-lightbox-close:hover {
+            background: rgba(40, 40, 40, 0.92);
+            border-color: #3a3a3a;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 6px 16px rgba(0, 0, 0, 0.35);
+        }
+        .image-lightbox-content img.fit-view {
+            max-width: 95vw;
+            max-height: 95vh;
+            cursor: zoom-in;
+        }
+        .image-lightbox-content img.zoomed {
+            max-width: none;
+            max-height: none;
+            cursor: zoom-out;
+        }
+
+        pre {
+            background: #0f0f0f; border: 1px solid var(--border-color); padding: 1.5rem;
+            border-radius: 6px; overflow-x: auto; margin: 2rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        code { font-family: var(--font-mono); font-size: 0.9rem; color: #ccc; }
+        .inline-code { background: rgba(34, 197, 94, 0.1); color: var(--terminal-green); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.85em; }
+        .cta-wrapper { margin-top: 1rem; }
+        .cta-button {
+            display: inline-block;
+            padding: 6px 12px;
+            border: 1px solid var(--terminal-green);
+            border-radius: 8px;
+            color: var(--terminal-green);
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(34, 197, 94, 0.25);
+            background-color: rgba(34, 197, 94, 0.08);
+        }
+
+        .post-end-cta { margin-top: 3rem; }
+
+        /* Responsive tweaks */
+        @media (max-width: 1100px) {
+            .post-wrapper { grid-template-columns: 1fr; grid-template-areas: "main" "toc"; gap: 1.5rem; }
+            .left-sidebar { display: none; }
+            article { grid-area: main; }
+            .right-sidebar { grid-area: toc; position: static; margin-top: 0; }
+        }
+        @media (max-width: 1000px) {
+            body { font-size: 0.98rem; }
+            .post-wrapper { grid-template-columns: 1fr; gap: 1.25rem; padding: 0 1rem; }
+            nav { position: sticky; top: 0; }
+            .left-sidebar { display: none; }
+            .right-sidebar { position: static; display: block; }
+            .post-wrapper > article { order: 1; }
+            .post-wrapper > .right-sidebar { order: 2; }
+            .right-sidebar { margin-top: 0; }
+            .post-meta { flex-wrap: wrap; gap: 10px; }
+        }
+        @media (max-width: 720px) {
+            .post-wrapper { margin: 100px auto 3rem auto; padding: 0 0.9rem; gap: 1.1rem; }
+            .container { padding: 0 1rem; }
+            h1 { margin-bottom: 0.75rem; }
+            pre { padding: 1.1rem; }
+
+            /* Projects/Publications: TOC at page end is not useful on mobile */
+            body[data-post-category="projects"] .right-sidebar,
+            body[data-post-category="publications"] .right-sidebar { display: none; }
+        }
+        @media (max-width: 560px) {
+            .post-wrapper { margin: 90px auto 3rem auto; padding: 0 0.75rem; }
+            .post-meta { font-size: 0.85rem; }
+            .toc-item, .toc-subitem { font-size: 0.82rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container nav-inner">
+            <a href="index.html" class="logo">hyperkube<span class="green">.dev</span></a>
+            <div class="nav-links">
+                <a href="index.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Terminal</a>
+                <a href="post.html?id=about" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> About</a>
+                <a href="projects-blog.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Projects</a>
+                <a href="blog.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Publications</a>
+                <a href="index.html#skills" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Skills</a>
+                <a href="index.html#contact" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Contact</a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+                <span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <ul>
+            <li><a href="index.html">Terminal</a></li>
+            <li><a href="post.html?id=about">About</a></li>
+            <li><a href="projects-blog.html">Projects</a></li>
+            <li><a href="blog.html">Publications</a></li>
+            <li><a href="index.html#skills">Skills</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <div class="post-wrapper">
+
+        <aside class="left-sidebar">
+            <div class="about-widget">
+                <span class="about-title">About Me</span>
+                <p class="about-text">Applied AI scientist optimizing intelligent systems. This is my vertical farm; mind the experimental flora.</p>
+            </div>
+
+            <hr class="nav-separator">
+
+            <ul class="nav-list">
+                <li><a href="index.html">Terminal</a></li>
+                <li><a href="post.html?id=about">About</a></li>
+                <li><a href="projects-blog.html">Projects</a></li>
+                <li><a href="blog.html">Publications</a></li>
+            </ul>
+
+            <hr class="nav-separator">
+
+            <ul class="nav-list">
+                <li><a href="https://github.com/nikolaosJP" target="_blank">GitHub ↗</a></li>
+                <li><a href="https://www.linkedin.com/in/nickiliopoulos" target="_blank">LinkedIn ↗</a></li>
+            </ul>
+        </aside>
+
+        <article id="post-content">
+            <div style="text-align: center; padding: 4rem 0;">
+                <div style="color: #666;">Loading...</div>
+            </div>
+        </article>
+
+        <aside class="right-sidebar">
+            <div class="toc-title">Table of Contents</div>
+            <ul class="toc-list" id="table-of-contents">
+                <li><a href="#top" class="toc-item">Loading...</a></li>
+            </ul>
+        </aside>
+
+    </div>
+
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+
+    <script>
+        // Navigation and heading hover effects - Optimized with caching
+        const chars = ['>', '#', '*', '_', '!', '?', '$', '/', ':', '+'];
+        const charsLen = chars.length;
+        const prefixCache = new WeakMap();
+
+        function getPrefix(el, className) {
+            if (!prefixCache.has(el)) {
+                prefixCache.set(el, el.querySelector(className));
+            }
+            return prefixCache.get(el);
+        }
+
+        function handleNavEnter(el) {
+            const span = getPrefix(el, '.nav-prefix');
+            if (span) span.textContent = chars[~~(Math.random() * charsLen)] + chars[~~(Math.random() * charsLen)];
+        }
+        function handleNavLeave(el) {
+            const span = getPrefix(el, '.nav-prefix');
+            if (span) span.textContent = "//";
+        }
+        function handleHeadingEnter(el) {
+            const span = getPrefix(el, '.heading-prefix');
+            if (span) span.textContent = chars[~~(Math.random() * charsLen)] + chars[~~(Math.random() * charsLen)];
+        }
+        function handleHeadingLeave(el) {
+            const span = getPrefix(el, '.heading-prefix');
+            if (span) span.textContent = "##";
+        }
+        window.handleNavEnter = handleNavEnter;
+        window.handleNavLeave = handleNavLeave;
+        window.handleHeadingEnter = handleHeadingEnter;
+        window.handleHeadingLeave = handleHeadingLeave;
+    </script>
+
+    <script>
+        // Mobile nav toggle
+        (function setupMobileMenu() {
+            const toggle = document.getElementById('nav-toggle');
+            const menu = document.getElementById('mobile-menu');
+            if (!toggle || !menu) return;
+
+            const closeMenu = () => {
+                menu.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+            };
+            toggle.addEventListener('click', () => {
+                menu.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', menu.classList.contains('open') ? 'true' : 'false');
+            });
+            menu.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') closeMenu();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeMenu();
+            });
+        })();
+
+        // Force scroll to top immediately - must happen before any browser hash processing
+        window.scrollTo(0, 0);
+
+        // Prevent browsers from restoring a mid-page scroll position when navigating back/forward
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+
+        // Clear any hash from URL to avoid anchor jump on subsequent interactions
+        if (window.location.hash) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+
+        // Parse frontmatter from markdown
+        function parseFrontmatter(markdown) {
+            const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+            const match = markdown.match(frontmatterRegex);
+
+            if (!match) {
+                return { metadata: {}, content: markdown };
+            }
+
+            const frontmatter = match[1];
+            const content = match[2];
+            const metadata = {};
+
+            frontmatter.split('\n').forEach(line => {
+                const [key, ...valueParts] = line.split(':');
+                if (key && valueParts.length) {
+                    metadata[key.trim()] = valueParts.join(':').trim();
+                }
+            });
+
+            return { metadata, content };
+        }
+
+        // Convert markdown headings to sections with IDs
+        function processMarkdownToSections(html) {
+            // Wrap content between headings in sections
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+
+            const headings = tempDiv.querySelectorAll('h2, h3, h4');
+            headings.forEach((heading, index) => {
+                const id = heading.textContent.toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-|-$/g, '');
+
+                // Add prefix span and hover handlers to h2 and h3
+                if (heading.tagName === 'H2' || heading.tagName === 'H3') {
+                    const text = heading.textContent;
+                    heading.dataset.title = text; // preserve clean title for TOC
+                    heading.innerHTML = `<span class="heading-prefix">##</span> ${text}`;
+                    heading.setAttribute('onmouseenter', 'handleHeadingEnter(this)');
+                    heading.setAttribute('onmouseleave', 'handleHeadingLeave(this)');
+                } else {
+                    // Preserve raw title for headings without prefix spans
+                    heading.dataset.title = heading.textContent;
+                }
+
+                // Find the next heading or end of content
+                let currentElement = heading;
+                const sectionContent = [];
+
+                while (currentElement.nextElementSibling &&
+                       !['H2', 'H3', 'H4'].includes(currentElement.nextElementSibling.tagName)) {
+                    sectionContent.push(currentElement.nextElementSibling);
+                    currentElement = currentElement.nextElementSibling;
+                }
+
+                // Create section wrapper
+                const section = document.createElement('section');
+                section.id = id;
+                section.appendChild(heading.cloneNode(true));
+                sectionContent.forEach(el => section.appendChild(el.cloneNode(true)));
+
+                // Replace original heading with section
+                heading.parentNode.replaceChild(section, heading);
+
+                // Remove the original elements that are now in the section
+                sectionContent.forEach(el => {
+                    if (el.parentNode) el.remove();
+                });
+            });
+
+            return tempDiv.innerHTML;
+        }
+
+        // Memory cache for parsed posts
+        const postCache = new Map();
+
+        // Static title manifest to avoid late pop-in while markdown loads
+        const titleManifest = {
+            'about': 'About Me',
+            'ai-resume-tailor': 'AI Resume Tailor',
+            'anomaly-detection': 'Anomaly Detection',
+            'cost-of-living-scraper': 'Cost of Living Scraper',
+            'energy-market-forecasting': 'Energy Market Forecasting',
+            'explainable-ai': 'Explainable AI',
+            'goal-tracker': 'Goal Tracker',
+            'mnist-classification': 'MNIST: The \"Hello World\" of deep learning',
+            'movie-recommendation': 'Movie Recommendation System',
+            'portfolio-tracker': 'Portfolio Tracker',
+            'rent-vs-buy': 'Rent vs Buy Simulator',
+            'style-transfer': 'Neural Style Transfer (pretrained VGG19)',
+            'textbook-solutions': 'Textbook Solutions',
+            'tale-two-florida-cities': 'Flood risk perceptions in Florida cities',
+            'demand-response-ottawa': 'Residential demand response in Ottawa',
+            'residential-demand-response-ontario': 'Residential DR determinants in Ontario',
+            'demand-response-japan': 'Residential demand response in Japan',
+            'shinchi-sustainable-trajectory': 'Shinchi Town sustainability survey',
+            'dsm-der-japan': 'Residential DSM/DER willingness in Japan',
+            'flood-awareness-chile': 'Flood awareness mapping in Chile',
+            'sustainable-space-exploration': 'Sustainable space exploration',
+            'tokyo-low-emission': 'Tokyo low-emission building strategy',
+            'flood-vulnerability-gender': 'Flood vulnerability and gender roles'
+        };
+
+        // Pre-rendered TOC manifest (ids follow the same slug rule as processMarkdownToSections)
+        const tocManifest = {
+            'flood-awareness-chile': [
+                { level: 'H2', title: 'The Problem Beneath the Spray' },
+                { level: 'H2', title: 'Key Insights' },
+                { level: 'H2', title: 'Moving Forward' }
+            ],
+            'sustainable-space-exploration': [
+                { level: 'H2', title: 'The Problem Above the Atmosphere' },
+                { level: 'H2', title: 'Key Insights' },
+                { level: 'H2', title: 'Moving Forward' }
+            ],
+            'tokyo-low-emission': [
+                { level: 'H2', title: 'Why Buildings Matter More Than You Think' },
+                { level: 'H2', title: 'The Policy Toolkit' },
+                { level: 'H3', title: 'Regulatory Nudges' },
+                { level: 'H3', title: 'Market Based Incentives' },
+                { level: 'H3', title: 'Information and Transparency Tools' },
+                { level: 'H2', title: 'Key Insights' },
+                { level: 'H2', title: 'Why This Matters' },
+                { level: 'H2', title: 'Moving Forward' }
+            ],
+            'flood-vulnerability-gender': [
+                { level: 'H2', title: 'The Problem Beneath the Waterline' },
+                { level: 'H2', title: 'What the Study Does Differently' },
+                { level: 'H3', title: 'Participatory Methods' },
+                { level: 'H3', title: 'Multivariate Analysis' },
+                { level: 'H2', title: 'Key Insights' },
+                { level: 'H2', title: 'Why This Matters' },
+                { level: 'H2', title: 'Moving Forward' }
+            ],
+            'tale-two-florida-cities': [],
+            'demand-response-ottawa': [],
+            'residential-demand-response-ontario': [],
+            'demand-response-japan': [],
+            'shinchi-sustainable-trajectory': [],
+            'dsm-der-japan': []
+        };
+
+        function slugify(text) {
+            return text.toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, '');
+        }
+
+        function setInitialTitle(postId, container) {
+            const title = titleManifest[postId];
+            if (!title || !container) return;
+            document.title = `${title} // hyperkube.dev`;
+            container.innerHTML = `
+                <div style="padding: 3rem 0; text-align: center;">
+                    <h1 style="margin-bottom: 0.5rem;">${title}</h1>
+                    <div style="color: #666;">Loading...</div>
+                </div>
+            `;
+        }
+
+        function setInitialTOC(postId, tocElement, postContentEl) {
+            if (!tocElement) return;
+            const entries = tocManifest[postId];
+            if (!entries) return;
+            if (entries.length === 0) {
+                tocElement.innerHTML = '<li><a href="#" class="toc-item" style="color: #666;">No sections</a></li>';
+                return;
+            }
+
+            // Build hierarchical TOC like generateTOC
+            const structure = [];
+            let currentH2 = null;
+            entries.forEach((entry) => {
+                if (entry.level === 'H2') {
+                    currentH2 = { id: slugify(entry.title), title: entry.title, subcategories: [] };
+                    structure.push(currentH2);
+                } else if (entry.level === 'H3') {
+                    if (currentH2) {
+                        currentH2.subcategories.push({ id: slugify(entry.title), title: entry.title });
+                    } else {
+                        structure.push({ id: slugify(entry.title), title: entry.title, subcategories: [] });
+                    }
+                }
+            });
+
+            let tocHTML = '';
+            structure.forEach(item => {
+                tocHTML += `<li><a href="#${item.id}" class="toc-item">${item.title}</a>`;
+                if (item.subcategories.length > 0) {
+                    tocHTML += '<ul>';
+                    item.subcategories.forEach(sub => {
+                        tocHTML += `<li><a href="#${sub.id}" class="toc-subitem">${sub.title}</a></li>`;
+                    });
+                    tocHTML += '</ul>';
+                }
+                tocHTML += '</li>';
+            });
+            tocElement.innerHTML = tocHTML;
+            // Mark first entry active for initial paint
+            const firstLink = tocElement.querySelector('a');
+            if (firstLink) firstLink.classList.add('active');
+        }
+
+        // Optimized: Load post from markdown file with caching and parallel fetching
+        async function loadPost(postId) {
+            // Check memory cache first
+            if (postCache.has(postId)) {
+                return postCache.get(postId);
+            }
+
+            // Try all categories in parallel (much faster!)
+            const categories = ['about', 'projects', 'publications'];
+            const fetchPromises = categories.map(category =>
+                fetch(`content/${category}/${postId}.md`)
+                    .then(response => response.ok ? response.text().then(text => ({ category, text })) : null)
+                    .catch(() => null)
+            );
+
+            const results = await Promise.all(fetchPromises);
+            const successfulResult = results.find(result => result !== null);
+
+            if (!successfulResult) {
+                console.error('Post not found:', postId);
+                return null;
+            }
+
+            const { category, text: markdown } = successfulResult;
+            const { metadata, content } = parseFrontmatter(markdown);
+
+            // Convert markdown to HTML
+            const htmlContent = marked.parse(content);
+            const processedContent = processMarkdownToSections(htmlContent);
+
+            const post = {
+                title: metadata.title || 'Untitled',
+                date: metadata.date || '',
+                tags: metadata.tags || '',
+                content: processedContent,
+                category: category,
+                metadata
+            };
+
+            // Cache the parsed result
+            postCache.set(postId, post);
+
+            return post;
+        }
+
+        function getPostEndCtaSpec(post) {
+            const category = post?.category;
+            const metadata = post?.metadata || {};
+
+            if (category === 'projects' && metadata.code_url) {
+                return { href: metadata.code_url, label: 'View Code' };
+            }
+
+            if (category === 'publications' && metadata.publication_url) {
+                return { href: metadata.publication_url, label: 'View Publication' };
+            }
+
+            return null;
+        }
+
+        function appendPostEndCta(post, postContent) {
+            const cta = getPostEndCtaSpec(post);
+            if (!cta) return;
+
+            // Avoid duplicates if the markdown already includes a CTA wrapper.
+            if (postContent.querySelector('.post-end-cta')) return;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'cta-wrapper post-end-cta';
+
+            const link = document.createElement('a');
+            link.className = 'cta-button';
+            link.href = cta.href;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.textContent = cta.label;
+
+            wrapper.appendChild(link);
+            postContent.appendChild(wrapper);
+        }
+
+        function generateTOC(postContent, tocElement) {
+            if (!tocElement || !postContent) return;
+
+            const headings = Array.from(postContent.querySelectorAll('section > h2, section > h3'));
+            if (headings.length === 0) {
+                tocElement.innerHTML = '<li><a href="#" class="toc-item" style="color: #666;">No sections</a></li>';
+                return;
+            }
+
+            const structure = [];
+            let currentH2 = null;
+
+            headings.forEach((heading) => {
+                const sectionId = heading.closest('section')?.id;
+                if (!sectionId) return;
+
+                const title = (heading.dataset.title || heading.textContent || '').trim();
+                if (!title) return;
+
+                if (heading.tagName === 'H2') {
+                    currentH2 = { id: sectionId, title, subcategories: [] };
+                    structure.push(currentH2);
+                } else if (heading.tagName === 'H3') {
+                    if (!currentH2) {
+                        structure.push({ id: sectionId, title, subcategories: [] });
+                    } else {
+                        currentH2.subcategories.push({ id: sectionId, title });
+                    }
+                }
+            });
+
+            if (structure.length === 0) {
+                tocElement.innerHTML = '<li><a href="#" class="toc-item" style="color: #666;">No sections</a></li>';
+                return;
+            }
+
+            let tocHTML = '';
+            structure.forEach(item => {
+                tocHTML += `<li><a href="#${item.id}" class="toc-item">${item.title}</a>`;
+                if (item.subcategories.length > 0) {
+                    tocHTML += '<ul>';
+                    item.subcategories.forEach(sub => {
+                        tocHTML += `<li><a href="#${sub.id}" class="toc-subitem">${sub.title}</a></li>`;
+                    });
+                    tocHTML += '</ul>';
+                }
+                tocHTML += '</li>';
+            });
+            tocElement.innerHTML = tocHTML;
+
+            setupTOCInteractions(tocElement);
+            updateActiveTocLink(tocElement);
+        }
+
+        function setupTOCInteractions(tocElement) {
+            if (!tocElement) return;
+            if (tocElement.dataset.tocBound === 'true') return;
+            tocElement.dataset.tocBound = 'true';
+
+            const scrollOffset = 120;
+
+            tocElement.addEventListener('click', (e) => {
+                const link = e.target.closest('a.toc-item, a.toc-subitem');
+                if (!link) return;
+                e.preventDefault();
+
+                const targetId = (link.getAttribute('href') || '').replace(/^#/, '');
+                if (!targetId) return;
+
+                const targetEl = document.getElementById(targetId);
+                if (!targetEl) return;
+
+                const targetTop = targetEl.getBoundingClientRect().top + window.scrollY - scrollOffset;
+                window.scrollTo({ top: targetTop, behavior: 'smooth' });
+
+                setActiveTocLink(tocElement, link);
+                history.replaceState(null, '', `#${targetId}`);
+            });
+
+            let scheduled = false;
+            window.addEventListener('scroll', () => {
+                if (scheduled) return;
+                scheduled = true;
+                requestAnimationFrame(() => {
+                    scheduled = false;
+                    updateActiveTocLink(tocElement);
+                });
+            }, { passive: true });
+        }
+
+        function setActiveTocLink(tocElement, link) {
+            if (!tocElement || !link) return;
+            tocElement.querySelectorAll('.toc-item, .toc-subitem').forEach(a => a.classList.remove('active'));
+            link.classList.add('active');
+        }
+
+        function updateActiveTocLink(tocElement) {
+            if (!tocElement) return;
+
+            const links = Array.from(tocElement.querySelectorAll('a.toc-item, a.toc-subitem'));
+            if (links.length === 0) return;
+
+            const scrollOffset = 120;
+            const cutoff = scrollOffset + 20;
+
+            let best = null;
+            let bestTop = -Infinity;
+
+            links.forEach((link) => {
+                const id = (link.getAttribute('href') || '').replace(/^#/, '');
+                if (!id) return;
+                const el = document.getElementById(id);
+                if (!el) return;
+
+                const top = el.getBoundingClientRect().top;
+                if (top <= cutoff && top > bestTop) {
+                    bestTop = top;
+                    best = link;
+                }
+            });
+
+            setActiveTocLink(tocElement, best || links[0]);
+        }
+
+        // Render post
+        function renderPost(post, postContent, tocElement, postId) {
+            document.title = post.title + " // hyperkube.dev";
+            if (post.category) {
+                document.body.dataset.postCategory = post.category;
+            } else {
+                delete document.body.dataset.postCategory;
+            }
+
+            postContent.innerHTML = `
+                <header class="post-header">
+                    <h1>${post.title}</h1>
+                    <div class="post-meta">
+                        <span>${post.date}</span>
+                        <span>•</span>
+                        <span>${post.tags}</span>
+                    </div>
+                </header>
+                ${post.content}
+            `;
+
+            appendPostEndCta(post, postContent);
+
+            // Ensure page stays at top after content loads
+            requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }));
+
+            setupImageLightbox(postContent);
+            // Show immediate TOC (from manifest if available), then finalize from rendered content
+            setInitialTOC(postId, tocElement, postContent);
+            generateTOC(postContent, tocElement);
+        }
+
+        // Lightbox for images so project screenshots can be viewed full size
+        function setupImageLightbox(postContent) {
+            const images = postContent.querySelectorAll('img');
+            if (!images.length) return;
+
+            let backdrop = document.querySelector('.image-lightbox-backdrop');
+            let lightboxImg;
+
+            if (!backdrop) {
+                backdrop = document.createElement('div');
+                backdrop.className = 'image-lightbox-backdrop';
+
+                const content = document.createElement('div');
+                content.className = 'image-lightbox-content';
+
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'image-lightbox-close';
+                closeBtn.setAttribute('aria-label', 'Close image');
+                closeBtn.textContent = 'Close';
+
+                lightboxImg = document.createElement('img');
+                lightboxImg.alt = 'Expanded view';
+
+                content.appendChild(lightboxImg);
+                content.appendChild(closeBtn);
+                backdrop.appendChild(content);
+                document.body.appendChild(backdrop);
+
+                const close = () => {
+                    backdrop.style.opacity = '0';
+                    setTimeout(() => {
+                        backdrop.style.display = 'none';
+                        backdrop.classList.remove('scrollable');
+                        backdrop.scrollTop = 0;
+                        backdrop.scrollLeft = 0;
+                        lightboxImg.classList.remove('zoomed');
+                        lightboxImg.classList.add('fit-view');
+                        document.body.style.overflow = '';
+                        document.documentElement.style.overflow = '';
+                        backdrop.style.opacity = '';
+                    }, 80);
+                };
+
+                backdrop.addEventListener('click', (e) => {
+                    if (e.target === backdrop || e.target.classList.contains('image-lightbox-close')) {
+                        close();
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && backdrop.style.display === 'flex') {
+                        close();
+                    }
+                });
+
+                // Toggle between fit-to-view and full-size zoom
+                lightboxImg.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isZoomed = lightboxImg.classList.contains('zoomed');
+                    if (isZoomed) {
+                        lightboxImg.classList.remove('zoomed');
+                        lightboxImg.classList.add('fit-view');
+                        backdrop.classList.remove('scrollable');
+                        backdrop.scrollTop = 0;
+                        backdrop.scrollLeft = 0;
+                    } else {
+                        lightboxImg.classList.remove('fit-view');
+                        lightboxImg.classList.add('zoomed');
+                        backdrop.classList.add('scrollable');
+                    }
+                });
+
+                backdrop.dataset.initialized = 'true';
+            } else {
+                lightboxImg = backdrop.querySelector('img');
+            }
+
+            const open = (src, altText) => {
+                lightboxImg.src = src;
+                lightboxImg.alt = altText || 'Expanded view';
+                lightboxImg.classList.remove('zoomed');
+                lightboxImg.classList.add('fit-view');
+                backdrop.classList.remove('scrollable');
+                backdrop.scrollTop = 0;
+                backdrop.scrollLeft = 0;
+                backdrop.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                document.documentElement.style.overflow = 'hidden';
+            };
+
+            images.forEach(img => {
+                if (img.dataset.lightboxBound === 'true') return;
+                img.dataset.lightboxBound = 'true';
+                img.addEventListener('click', () => open(img.src, img.alt));
+            });
+        }
+
+        // Initialize page
+        async function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id') || 'about';
+            const postContent = document.getElementById('post-content');
+            const tocElement = document.getElementById('table-of-contents');
+
+            // Set title immediately from manifest to prevent pop-in
+            setInitialTitle(postId, postContent);
+            // Pre-render TOC if known
+            setInitialTOC(postId, tocElement, postContent);
+
+            // Try to load from markdown first
+            let post = await loadPost(postId);
+            if (post) {
+                renderPost(post, postContent, tocElement, postId);
+            } else {
+                postContent.innerHTML = `
+                    <div style="text-align: center; padding: 4rem 0;">
+                        <h2>Post Not Found</h2>
+                        <p style="color: #666;">The requested article doesn't exist.</p>
+                        <a href="blog.html" style="color: var(--terminal-green);">View all articles →</a>
+                    </div>
+                `;
+                tocElement.innerHTML = '<li><a href="#" class="toc-item" style="color: #666;">N/A</a></li>';
+            }
+        }
+
+        // Run on page load
+        init();
+    </script>
+</body>
+</html>

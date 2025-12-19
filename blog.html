@@ -1,14 +1,423 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Redirecting…</title>
-  <meta http-equiv="refresh" content="0; url=/publications/" />
-  <script>
-    location.replace('/publications/' + location.search + location.hash);
-  </script>
-</head>
-<body></body>
-</html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publications // hyperkube</title>
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;600;700&display=block" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-black: #050505;
+            --grid-size: 20px;
+            --grid-color: rgba(34, 197, 94, 0.11); /* Consistent Grid */
+            --terminal-green: #22c55e;
+            --text-main: #e5e5e5;
+            --text-muted: #888;
+            --border-color: #333;
+            --font-mono: 'Fira Code', monospace;
+            --font-sans: 'Inter', sans-serif;
+            --max-width: 1400px;
+        }
 
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; overflow-y: scroll; scrollbar-gutter: stable; overscroll-behavior-y: contain; font-size: clamp(15px, 0.9vw + 13px, 17px); }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-black);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.8;
+            background-size: var(--grid-size) var(--grid-size);
+            background-image: radial-gradient(var(--grid-color) 1px, transparent 1px);
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        a:hover { color: var(--terminal-green); }
+        .green { color: var(--terminal-green); }
+
+        /* ============================================
+           NAVIGATION - MUST BE IDENTICAL ON ALL PAGES
+           ============================================ */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.2rem 0;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(4px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 100;
+            line-height: 1;
+        }
+        nav .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .nav-links a {
+            transition: color 0.2s;
+            color: var(--text-muted);
+        }
+        .nav-links a:hover {
+            color: var(--terminal-green);
+        }
+        .nav-links span {
+            cursor: pointer;
+            transition: color 0.2s;
+            color: var(--text-muted);
+        }
+        .nav-links span:hover {
+            color: var(--terminal-green);
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+        }
+        .nav-toggle {
+            display: none;
+            background: #0c0c0c;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            width: 42px;
+            height: 38px;
+            padding: 0;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-toggle:hover { border-color: var(--terminal-green); color: var(--terminal-green); }
+        .hamburger {
+            width: 18px;
+            height: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .hamburger span {
+            height: 2px;
+            width: 100%;
+            background: currentColor;
+            border-radius: 2px;
+        }
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(6px);
+            z-index: 120;
+            padding: 90px 1.5rem 2rem 1.5rem;
+        }
+        .mobile-menu.open { display: block; }
+        .mobile-menu ul { list-style: none; padding: 0; margin: 0; }
+        .mobile-menu li { margin-bottom: 1rem; }
+        .mobile-menu a {
+            display: block;
+            padding: 0.9rem 1rem;
+            border: 1px solid #1a1a1a;
+            border-radius: 10px;
+            background: rgba(20, 20, 20, 0.85);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+        }
+        .mobile-menu a:hover { border-color: var(--terminal-green); color: var(--terminal-green); }
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .nav-toggle { display: inline-flex; }
+        }
+        /* ============================================ */
+
+        .container { max-width: var(--max-width); margin: 0 auto; padding: 0 2rem; }
+
+        /* Archive layout with sidebar - matches post.html */
+        .archive-wrapper {
+            max-width: var(--max-width);
+            margin: 120px auto 4rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        /* Left sidebar */
+        .left-sidebar { position: sticky; top: 120px; font-family: var(--font-mono); font-size: 0.9rem; }
+        .about-widget { margin-bottom: 1.5rem; }
+        .about-title { font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem; display: block; }
+        .about-text { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; font-family: var(--font-sans); }
+        .nav-separator { border: none; height: 1px; background: #222; margin: 1.5rem 0; }
+        .nav-list { list-style: none; padding: 0; margin: 0; }
+        .nav-list li { margin-bottom: 0.8rem; }
+        .nav-list a { color: var(--text-muted); display: block; transition: transform 0.2s, color 0.2s; font-size: 0.9rem; }
+        .nav-list a:hover { color: var(--text-main); transform: translateX(3px); }
+
+        .archive-content { min-width: 0; }
+        
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 3rem; letter-spacing: -1px; }
+        h3 { 
+            font-family: var(--font-mono); font-size: 1.5rem; 
+            border-bottom: 1px solid var(--border-color); 
+            padding-bottom: 0.5rem; margin-top: 3rem; margin-bottom: 1.5rem; 
+        }
+
+        .post-list { list-style: none; padding: 0; }
+        .post-item {
+            display: flex; align-items: baseline; gap: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        .post-item:hover .post-title { color: var(--terminal-green); }
+        .post-date {
+            font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted);
+            min-width: 100px;
+        }
+        .post-title { font-size: 1.1rem; font-weight: 600; }
+
+        @media(max-width: 600px) {
+            .post-item { flex-direction: column; gap: 5px; }
+            .post-date { min-width: 0; }
+        }
+
+        @media(max-width: 600px) {
+            .post-item { flex-direction: column; gap: 5px; }
+        }
+
+        @media (max-width: 1100px) {
+            .archive-wrapper { grid-template-columns: 1fr; gap: 2rem; }
+            .left-sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container nav-inner">
+            <a href="index.html" class="logo">hyperkube<span class="green">.dev</span></a>
+            <div class="nav-links">
+                <a href="index.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Terminal</a>
+                <a href="post.html?id=about" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> About</a>
+                <a href="projects-blog.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Projects</a>
+                <a href="blog.html" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Publications</a>
+                <a href="index.html#skills" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Skills</a>
+                <a href="index.html#contact" onmouseenter="handleNavEnter(this)" onmouseleave="handleNavLeave(this)"><span class="nav-prefix">//</span> Contact</a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false">
+                <span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <ul>
+            <li><a href="index.html">Terminal</a></li>
+            <li><a href="post.html?id=about">About</a></li>
+            <li><a href="projects-blog.html">Projects</a></li>
+            <li><a href="blog.html">Publications</a></li>
+            <li><a href="index.html#skills">Skills</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <div class="archive-wrapper">
+        <aside class="left-sidebar">
+            <div class="about-widget">
+                <span class="about-title">About Me</span>
+                <p class="about-text">Applied AI scientist optimizing intelligent systems. This is my vertical farm; mind the experimental flora.</p>
+            </div>
+
+            <hr class="nav-separator">
+
+            <ul class="nav-list">
+                <li><a href="index.html">Terminal</a></li>
+                <li><a href="post.html?id=about">About</a></li>
+                <li><a href="projects-blog.html">Projects</a></li>
+                <li><a href="blog.html">Publications</a></li>
+            </ul>
+
+            <hr class="nav-separator">
+
+            <ul class="nav-list">
+                <li><a href="https://github.com/nikolaosJP" target="_blank">GitHub ↗</a></li>
+                <li><a href="https://www.linkedin.com/in/nickiliopoulos" target="_blank">LinkedIn ↗</a></li>
+            </ul>
+        </aside>
+
+        <div class="archive-content">
+            <h1>Publications</h1>
+
+            <h3>2025</h3>
+            <ul class="post-list">
+                <li>
+                    <a class="post-item" href="post.html?id=social-life-of-stocks">
+                        <span class="post-date">Dec 20</span>
+                        <span class="post-title">The Social Life of Stocks: How Correlations Drive Portfolio Risk</span>
+                    </a>
+                </li>
+            </ul>
+
+            <h3>2024</h3>
+            <ul class="post-list">
+                <li>
+                    <a class="post-item" href="post.html?id=tale-two-florida-cities">
+                        <span class="post-date">Oct 24</span>
+                        <span class="post-title">Flood risk perceptions in Florida cities</span>
+                    </a>
+                </li>
+            </ul>
+
+            <h3>2023</h3>
+            <ul class="post-list">
+                <li>
+                    <a class="post-item" href="post.html?id=demand-response-ottawa">
+                        <span class="post-date">Jul 24</span>
+                        <span class="post-title">Residential demand response in Ottawa</span>
+                    </a>
+                </li>
+            </ul>
+
+            <h3>2021</h3>
+            <ul class="post-list">
+                <li>
+                    <a class="post-item" href="post.html?id=residential-demand-response-ontario">
+                        <span class="post-date">Oct 16</span>
+                        <span class="post-title">Residential DR determinants in Ontario</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="post-item" href="post.html?id=demand-response-japan">
+                        <span class="post-date">May 13</span>
+                        <span class="post-title">Residential demand response in Japan</span>
+                    </a>
+                </li>
+            </ul>
+
+            <h3>2020</h3>
+            <ul class="post-list">
+                <li>
+                    <a class="post-item" href="post.html?id=shinchi-sustainable-trajectory">
+                        <span class="post-date">Oct 26</span>
+                        <span class="post-title">Shinchi Town sustainability survey</span>
+                    </a>
+                </li>
+            </ul>
+
+            <h3>2019</h3>
+            <ul class="post-list">
+                <li>
+                    <a class="post-item" href="post.html?id=dsm-der-japan">
+                        <span class="post-date">Dec 2</span>
+                        <span class="post-title">Residential DSM/DER willingness in Japan</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="post-item" href="post.html?id=sustainable-space-exploration">
+                        <span class="post-date">Sep 27</span>
+                        <span class="post-title">Sustainable space exploration</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="post-item" href="post.html?id=flood-awareness-chile">
+                        <span class="post-date">Jun 13</span>
+                        <span class="post-title">Flood awareness mapping in Chile</span>
+                    </a>
+                </li>
+            </ul>
+
+            <h3>2018</h3>
+            <ul class="post-list">
+                <li>
+                    <a class="post-item" href="post.html?id=tokyo-low-emission">
+                        <span class="post-date">Jul 14</span>
+                        <span class="post-title">Tokyo low-emission building strategy</span>
+                    </a>
+                </li>
+            </ul>
+
+            <h3>2017</h3>
+            <ul class="post-list">
+                <li>
+                    <a class="post-item" href="post.html?id=flood-vulnerability-gender">
+                        <span class="post-date">Oct 22</span>
+                        <span class="post-title">Flood vulnerability and gender roles</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Navigation hover effects - Optimized with caching
+        const chars = ['>', '#', '*', '_', '!', '?', '$', '/', ':', '+'];
+        const charsLen = chars.length;
+        const prefixCache = new WeakMap();
+
+        function getPrefix(el) {
+            if (!prefixCache.has(el)) {
+                prefixCache.set(el, el.querySelector('.nav-prefix'));
+            }
+            return prefixCache.get(el);
+        }
+
+        function handleNavEnter(el) {
+            const span = getPrefix(el);
+            if (span) span.textContent = chars[~~(Math.random() * charsLen)] + chars[~~(Math.random() * charsLen)];
+        }
+        function handleNavLeave(el) {
+            const span = getPrefix(el);
+            if (span) span.textContent = "//";
+        }
+        window.handleNavEnter = handleNavEnter;
+        window.handleNavLeave = handleNavLeave;
+
+        // Mobile nav toggle
+        (function setupMobileMenu() {
+            const toggle = document.getElementById('nav-toggle');
+            const menu = document.getElementById('mobile-menu');
+            if (!toggle || !menu) return;
+
+            const closeMenu = () => {
+                menu.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+            };
+            toggle.addEventListener('click', () => {
+                menu.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', menu.classList.contains('open') ? 'true' : 'false');
+            });
+            menu.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') closeMenu();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeMenu();
+            });
+        })();
+
+    </script>
+
+</body>
+</html>

@@ -8,8 +8,8 @@ Personal site built as a static HTML/CSS/JS project. No build tooling or framewo
 - Google Fonts (Fira Code, Inter)
 
 ## Project structure
-- `main/index.html` — main landing page with the terminal experience
-- `publications/index.html`, `post/index.html`, `projects/index.html` — static content shells
+- `index.html` — main landing page with the terminal experience
+- `blog.html`, `post.html`, `projects-blog.html` — static content shells
 - `js/llm.js` — lightweight assistant logic (weather helper, small chat)
 - `js/terminal.js` — terminal UI behavior and animations
 - `content/`, `games/` — supporting assets/content
