@@ -164,7 +164,8 @@ At that point you have identified True, False, and Random within exactly three q
         title: 'Riddles',
         description: "Bite-sized logic puzzles. Type 'riddles' to list.",
         help: [
-            `Riddles:\n  riddles       - List available riddles\n  riddle [id]   - Start a riddle (ex: riddle hats10)`
+            'riddles       - List available riddles',
+            'riddle [id]   - Start a riddle (ex: riddle hats10)'
         ],
         isRunning: () => Boolean(activeRiddleId),
         stop,
@@ -179,4 +180,3 @@ At that point you have identified True, False, and Random within exactly three q
         })
     });
 })();
-

@@ -49,7 +49,7 @@
         id: 'zork',
         title: 'Zork',
         description: "Classic text adventure. Type 'zork' to explore The Great Underground Empire.",
-        help: [`Zork:\n  zork          - Play Zork1: The Great Underground Empire`],
+        help: ['zork          - Play Zork1: The Great Underground Empire'],
         isRunning,
         stop,
         handleInput,
@@ -58,4 +58,3 @@
         })
     });
 })();
-

@@ -129,16 +129,21 @@
         zorkCursor.style.color = gameMode ? '#ccc' : 'var(--terminal-green)';
     }
 
-    const coreHelpText = `help
-Standard Commands:
-  help          - Display this help message
-  theme [style] - Change terminal theme (matrix, midnight, retro, hacker)
-  yatmal [text] - Rooftop rant of legend
-  projects      - List the actual projects built by hyperkube
-  publications  - List recent publications
-  education     - Show education background
-  neofetch      - Display system information (alias: netofetch)
-  clear         - Clear the console`;
+    const coreHelpLines = [
+        'help          - Display this help message',
+        'theme [style] - Change terminal theme (matrix, midnight, retro, hacker)',
+        'yatmal [text] - Rooftop rant of legend',
+        'projects      - List the actual projects built by hyperkube',
+        'publications  - List recent publications',
+        'education     - Show education background',
+        'neofetch      - Display system information',
+        'clear         - Clear the console'
+    ];
+
+    function renderHelpText(extraLines) {
+        const lines = coreHelpLines.concat(Array.isArray(extraLines) ? extraLines : []);
+        return `Commands:\n${lines.map((line) => `  ${line}`).join('\n')}`;
+    }
 
     const blockedFsMessage = (cmd) => (
 `╷
@@ -154,8 +159,8 @@ Try: help to list available commands, or simply say something to communicate wit
 
     const cmds = {
         help: () => {
-            const gameHelp = window.TerminalGameRegistry?.getHelpText?.();
-            return gameHelp ? `${coreHelpText}\n\n${gameHelp}` : coreHelpText;
+            const gameHelp = window.TerminalGameRegistry?.getHelpLines?.();
+            return renderHelpText(gameHelp);
         },
         cd: () => blockedFsMessage('cd'),
         cp: () => blockedFsMessage('cp'),
@@ -229,21 +234,7 @@ Try: help to list available commands, or simply say something to communicate wit
             return applyTheme(choice);
         },
         neofetch: () => (
-`hyperkube@dev
-----------------
-OS: Ubuntu 22.04.4 LTS (WSL2)
-Kernel: 6.6.87.2-microsoft-standard-WSL2
-Shell: /bin/js (browser)
-Machine: Xenomorph (Microsoft WSL2)
-CPU: Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz (4 vCPU)
-GPU: NVIDIA GeForce RTX 2080
-Memory: 11GiB total
-Theme: ${terminalWindow?.dataset.termTheme || "matrix"}`
-        ),
-        netofetch: () => (
-`hyperkube@dev
-----------------
-OS: Ubuntu 22.04.4 LTS (WSL2)
+`OS: Ubuntu 22.04.4 LTS (WSL2)
 Kernel: 6.6.87.2-microsoft-standard-WSL2
 Shell: /bin/js (browser)
 Machine: Xenomorph (Microsoft WSL2)

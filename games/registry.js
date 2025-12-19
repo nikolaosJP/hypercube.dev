@@ -87,17 +87,19 @@
         return handlers;
     }
 
-    function getHelpText() {
-        const chunks = [];
-
-        chunks.push(`Games:\n  games         - List available console games\n  quit          - Quit the current game (if playing)`);
+    function getHelpLines() {
+        const lines = ['games         - List available console games'];
 
         for (const game of list()) {
             if (!Array.isArray(game.help) || game.help.length === 0) continue;
-            chunks.push(game.help.join('\n'));
+            for (const line of game.help) {
+                const normalized = String(line || '').trim();
+                if (!normalized) continue;
+                lines.push(normalized);
+            }
         }
 
-        return chunks.join('\n\n');
+        return lines;
     }
 
     window.TerminalGameRegistry = {
@@ -105,9 +107,8 @@
         list,
         getActiveGame,
         getCommandHandlers,
-        getHelpText,
+        getHelpLines,
         stopActiveGame,
         stopAllGames
     };
 })();
-
