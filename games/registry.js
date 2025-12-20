@@ -89,12 +89,15 @@
 
     function getHelpLines() {
         const lines = ['games         - List available console games'];
+        const banned = ['zork', 'doom', 'riddles', 'riddle'];
 
         for (const game of list()) {
             if (!Array.isArray(game.help) || game.help.length === 0) continue;
             for (const line of game.help) {
                 const normalized = String(line || '').trim();
                 if (!normalized) continue;
+                const firstWord = normalized.split(/\s+/)[0].toLowerCase();
+                if (banned.includes(firstWord)) continue;
                 lines.push(normalized);
             }
         }

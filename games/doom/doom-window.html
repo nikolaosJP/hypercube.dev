@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+                                <title>DOOM: Shareware Edition</title>
+                            <style>
+                                :root {
+                                    color-scheme: dark;
+                                }
+                                html, body {
+                                    margin: 0;
+                                    padding: 0;
+                                    height: 100%;
+                                    background: #000;
+                                    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+                                    color: #d4d4d4;
+                                }
+                                #doom-stage {
+                                    position: fixed;
+                                    inset: 0;
+                                    background: #000;
+                                    overflow: hidden;
+                                }
+                                #doom-canvas {
+                                    width: 100%;
+                                    height: 100%;
+                                    display: block;
+                                    image-rendering: pixelated;
+                                    outline: none;
+                                    touch-action: none;
+                                }
+                                #doom-status {
+                                    position: absolute;
+                                    inset: 0;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    text-align: center;
+                                    padding: 24px;
+                                    background: rgba(0, 0, 0, 0.7);
+                                    font-size: 14px;
+                                    letter-spacing: 0.04em;
+                                }
+                                #doom-help {
+                                    position: absolute;
+                                    top: 12px;
+                                    left: 12px;
+                                    font-size: 12px;
+                                    color: #e5e7eb;
+                                    background: rgba(0, 0, 0, 0.6);
+                                    padding: 8px 10px;
+                                    border: 1px solid rgba(148, 163, 184, 0.4);
+                                    border-radius: 6px;
+                                    line-height: 1.4;
+                                    max-width: min(360px, 80vw);
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div id="doom-stage">
+                                <canvas id="doom-canvas" aria-label="DOOM" tabindex="0"></canvas>
+                                <div id="doom-status">Loading DOOM (Shareware)...</div>
+                                <div id="doom-help">Controls: Arrow keys move/turn, Ctrl fires, Space uses, Alt strafes, Shift runs, Enter selects.</div>
+                            </div>
+                    
+                            <script src="./js-dos.js"></script>
+                            <script>
+                                (function () {
+                                    const canvas = document.getElementById('doom-canvas');
+                                    const status = document.getElementById('doom-status');
+                                    const help = document.getElementById('doom-help');
+                    
+                                    const wdosboxUrl = new URL('./wdosbox.js', window.location.href).toString();
+                                    const bundleUrl = new URL('./doom.jsdos', window.location.href);
+                                    bundleUrl.searchParams.set('v', Date.now().toString());
+                                    const bundleHref = bundleUrl.toString();
+                    
+                                    function setStatus(text) {
+                                        if (!status) return;
+                                        status.textContent = text;
+                                    }
+                    
+                                    function clearStatus() {
+                                        if (!status) return;
+                                        status.style.display = 'none';
+                                    }
+                    
+                                    function focusCanvas() {
+                                        if (canvas && typeof canvas.focus === 'function') {
+                                            canvas.focus();
+                                        }
+                                    }
+                    
+                                    async function clearJsDosCache(reason) {
+                                        const prefixes = ['js-dos', 'jsdos', 'dosbox'];
+                                        const matchesPrefix = (name) => {
+                                            if (!name) return false;
+                                            const lower = name.toLowerCase();
+                                            return prefixes.some((prefix) => lower.startsWith(prefix));
+                                        };
+                                        console.log(`[doom] clearing cache (${reason || 'manual'})`);
+                                        try {
+                                            if (typeof indexedDB !== 'undefined') {
+                                                if (typeof indexedDB.databases === 'function') {
+                                                    const dbs = await indexedDB.databases();
+                                                    const deletions = dbs
+                                                        .map((db) => db?.name)
+                                                        .filter(matchesPrefix)
+                                                        .map((name) => new Promise((resolve) => {
+                                                            const req = indexedDB.deleteDatabase(name);
+                                                            req.onsuccess = req.onerror = req.onblocked = () => resolve();
+                                                        }));
+                                                    if (deletions.length) {
+                                                        await Promise.all(deletions);
+                                                    }
+                                                } else {
+                                                    ['js-dos-cache', 'js-dos', 'jsdos', 'dosbox'].forEach((name) => {
+                                                        try {
+                                                            indexedDB.deleteDatabase(name);
+                                                        } catch (err) {
+                                                            console.log(`[doom] cache delete failed for ${name}: ${err || 'unknown'}`);
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        } catch (err) {
+                                            console.log(`[doom] cache clear failed: ${err || 'unknown'}`);
+                                        }
+                    
+                                        try {
+                                            if (typeof localStorage !== 'undefined') {
+                                                Object.keys(localStorage)
+                                                    .filter(matchesPrefix)
+                                                    .forEach((key) => localStorage.removeItem(key));
+                                            }
+                                        } catch (err) {
+                                            console.log(`[doom] localStorage cleanup failed: ${err || 'unknown'}`);
+                                        }
+                                    }
+                    
+                                    async function startDoom() {
+                                        await clearJsDosCache('startup');
+                                        if (typeof window.Dos !== 'function') {
+                                            setStatus('Error: DOOM runtime not loaded.');
+                                            return;
+                                        }
+                    
+                                        let dos;
+                                        try {
+                                            dos = window.Dos(canvas, {
+                                                wdosboxUrl,
+                                                onprogress: (label, loaded, total) => {
+                                                    if (typeof loaded === 'number' && typeof total === 'number' && total > 0) {
+                                                        const percent = Math.min(100, Math.round((loaded / total) * 100));
+                                                        setStatus(`${label} (${percent}%)`);
+                                                        return;
+                                                    }
+                                                    setStatus(label);
+                                                },
+                                                onerror: (err) => {
+                                                    setStatus(`Error: ${err || 'Failed to load DOOM runtime.'}`);
+                                                },
+                                                log: (message) => {
+                                                    if (typeof message === 'string' && message.trim().length > 0) {
+                                                        console.log(`[doom] ${message}`);
+                                                    }
+                                                }
+                                            });
+                                        } catch (err) {
+                                            setStatus('Error: failed to start DOOM runtime.');
+                                            return;
+                                        }
+                    
+                                        if (typeof dos?.catch === 'function') {
+                                            dos.catch((err) => {
+                                                setStatus(`Error: ${err || 'Failed to load DOOM runtime.'}`);
+                                            });
+                                        }
+                    
+                                        dos.ready((fs, main) => {
+                                            let sawDoomStart = false;
+                                            let shellTriggered = false;
+                                            fs.extract(bundleHref)
+                                                .then(() => main(['-conf', '.jsdos/dosbox.conf']))
+                                                .then((ci) => {
+                                                    clearStatus();
+                                                    focusCanvas();
+
+                                                    // Notify parent when DOOM exits
+                                                    if (typeof ci.onterminate === 'function') {
+                                                        const originalTerminate = ci.onterminate;
+                                                        ci.onterminate = () => {
+                                                            window.parent.postMessage('doom-exit', '*');
+                                                            if (originalTerminate) originalTerminate();
+                                                        };
+                                                    }
+
+                                                    try {
+                                                        ci.listenStdout((text) => {
+                                                            if (!text) return;
+                                                            console.log(`[doom stdout] ${text}`);
+                                                            
+                                                            // Standard DOOM exit detection:
+                                                            // When DOOM quits, it drops to DOS. We look for prompts.
+                                                            // Common prompts: "C:\>", "C:\DOOM>", or just ">"
+                                                            const cleaned = text.trim();
+                                                            if (sawDoomStart && (
+                                                                cleaned.endsWith('>') || 
+                                                                cleaned.includes('C:\\') || 
+                                                                cleaned.includes('Exiting') ||
+                                                                cleaned === 'c:'
+                                                            )) {
+                                                                console.log('[doom] Detected exit signal in stdout');
+                                                                window.parent.postMessage('doom-exit', '*');
+                                                            }
+
+                                                            if (!sawDoomStart && /P_Init|W_Init|V_Init|Doom/i.test(text)) {
+                                                                sawDoomStart = true;
+                                                            }
+                                                        });
+                                                    } catch {
+                                                        // Ignore stdout wiring errors.
+                                                    }
+                                                    setTimeout(() => {
+                                                        if (sawDoomStart || shellTriggered) return;
+                                                        shellTriggered = true;
+                                                        console.log('[doom] autoexec not detected, running DOOM.EXE manually.');
+                                                        try {
+                                                            const shellPromise = ci.shell('mount c .', 'c:', 'DOOM.EXE');
+                                                            if (shellPromise && typeof shellPromise.catch === 'function') {
+                                                                shellPromise.catch((err) => {
+                                                                    console.log(`[doom] shell failed: ${err || 'unknown'}`);
+                                                                });
+                                                            }
+                                                        } catch (err) {
+                                                            console.log(`[doom] shell exception: ${err || 'unknown'}`);
+                                                        }
+                                                    }, 2000);
+                                                })
+                                                .catch((err) => {
+                                                    setStatus(`Error: failed to load DOOM. ${err || ''}`.trim());
+                                                });
+                                        });
+                                    }
+
+                                    if (help) {
+                                        help.style.display = 'block';
+                                    }
+                                    if (canvas) {
+                                        canvas.addEventListener('click', focusCanvas);
+                                        canvas.addEventListener('pointerdown', focusCanvas);
+                                    }
+
+                                    window.addEventListener('keydown', (event) => {
+                                        if (!event || event.isComposing) return;
+                                        const key = event.key;
+                                        if (key === 'ArrowUp' || key === 'ArrowDown' || key === 'ArrowLeft' || key === 'ArrowRight' || key === ' ') {
+                                            event.preventDefault();
+                                        }
+                                    }, { capture: true });
+
+                                    window.addEventListener('beforeunload', () => {
+                                        clearJsDosCache('beforeunload');
+                                    });
+
+                                    startDoom();
+                                })();
+        </script>
+    </body>
+</html>

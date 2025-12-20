@@ -10,12 +10,23 @@
     const termPrompt = termLine ? termLine.querySelector('.prompt-command') : null;
     const terminalWindow = document.querySelector('.terminal-window');
     const terminalBar = terminalWindow ? terminalWindow.querySelector('.terminal-bar') : null;
+    const terminalOverlay = document.getElementById('terminal-overlay');
+    const terminalExpandButton = document.getElementById('terminal-expand');
     const TERMINAL_PROMPT = '[guest@hyperkube.dev ~]$';
 
     if (termPrompt) termPrompt.textContent = TERMINAL_PROMPT;
     const defaultPromptHTML = TERMINAL_PROMPT;
 
     if (!bootLog || !termDisplay || !termLine || !termInput) return;
+
+    // Ensure Ctrl+F5 reloads even if a game runtime captured keydown.
+    window.addEventListener('keydown', (e) => {
+        if (!e || e.isComposing) return;
+        if (e.key !== 'F5' || !e.ctrlKey) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.location.reload();
+    }, true);
 
     // Custom blinking cursor for Zork input (shows as "_")
     let zorkCursor = null;
@@ -132,7 +143,7 @@
     const coreHelpLines = [
         'help          - Display this help message',
         'theme [style] - Change terminal theme (matrix, midnight, retro, hacker)',
-        'yatmal [text] - Rooftop rant of legend',
+        'yatmal        - Rooftop rant of legend',
         'projects      - List the actual projects built by hyperkube',
         'publications  - List recent publications',
         'education     - Show education background',
@@ -142,7 +153,11 @@
 
     function renderHelpText(extraLines) {
         const lines = coreHelpLines.concat(Array.isArray(extraLines) ? extraLines : []);
-        return `Commands:\n${lines.map((line) => `  ${line}`).join('\n')}`;
+        const sorted = lines
+            .slice()
+            .filter(Boolean)
+            .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+        return `Commands:\n${sorted.map((line) => `  ${line}`).join('\n')}`;
     }
 
     const blockedFsMessage = (cmd) => (
@@ -216,8 +231,8 @@ Try: help to list available commands, or simply say something to communicate wit
   - MSc, Sustainability Science — The University of Tokyo (2016–2018), Tokyo, Japan
   - BSc, Economics — University of Thessaly (2010–2015), Thessaly, Greece`
         ),
-        yatmal: (_, raw) => {
-            const text = raw.replace(/^yatmal\s*/i, "") || "You're tearing me apart, Lisa!";
+        yatmal: () => {
+            const text = "You're tearing me apart, Lisa!";
             const gifUrl = "https://ift.tt/36uiRLW";
             return {
                 html: true,
@@ -299,6 +314,27 @@ Theme: ${terminalWindow?.dataset.termTheme || "matrix"}`
     }
     window.focusTerminal = focusTerminal;
 
+    function setTerminalExpanded(expanded) {
+        if (!terminalWindow) return;
+        terminalWindow.classList.toggle('terminal-expanded', expanded);
+        document.body.classList.toggle('terminal-expanded-lock', expanded);
+        if (terminalOverlay) {
+            terminalOverlay.classList.toggle('visible', expanded);
+        }
+        if (terminalExpandButton) {
+            terminalExpandButton.setAttribute('aria-pressed', expanded ? 'true' : 'false');
+            terminalExpandButton.setAttribute('aria-label', expanded ? 'Collapse terminal' : 'Expand terminal');
+        }
+        if (expanded) focusTerminal();
+    }
+
+    function toggleTerminalExpand(event) {
+        if (event) event.stopPropagation();
+        const expanded = !terminalWindow?.classList.contains('terminal-expanded');
+        setTerminalExpanded(expanded);
+    }
+    window.toggleTerminalExpand = toggleTerminalExpand;
+
     function enterGameMode() {
         ensureCursorInfra();
         gameMode = true;
@@ -360,7 +396,15 @@ Theme: ${terminalWindow?.dataset.termTheme || "matrix"}`
         pre.textContent = text;
 
         wrapper.appendChild(pre);
-        termDisplay.insertBefore(wrapper, termLine);
+        
+        if (termLine && termLine.parentNode === termDisplay) {
+            termDisplay.insertBefore(wrapper, termLine);
+        } else {
+            termDisplay.appendChild(wrapper);
+            // If termLine exists but is detached or elsewhere, consider appending it back? 
+            // For now, just ensure content is added.
+            if (termLine) termDisplay.appendChild(termLine);
+        }
 
         // Use requestAnimationFrame for smoother scroll
         requestAnimationFrame(() => {
@@ -375,7 +419,14 @@ Theme: ${terminalWindow?.dataset.termTheme || "matrix"}`
             const wrapper = document.createElement('div');
             wrapper.style.marginBottom = '10px';
             wrapper.innerHTML = output.content;
-            termDisplay.insertBefore(wrapper, termLine);
+            
+            if (termLine && termLine.parentNode === termDisplay) {
+                termDisplay.insertBefore(wrapper, termLine);
+            } else {
+                termDisplay.appendChild(wrapper);
+                if (termLine) termDisplay.appendChild(termLine);
+            }
+            
             requestAnimationFrame(() => {
                 termDisplay.scrollTop = termDisplay.scrollHeight;
             });
@@ -413,7 +464,12 @@ Theme: ${terminalWindow?.dataset.termTheme || "matrix"}`
         const bootSequence = getBootSequence(sessionId);
 
         if (!termDisplay.contains(bootLog)) {
-            termDisplay.insertBefore(bootLog, termLine);
+            if (termLine && termLine.parentNode === termDisplay) {
+                termDisplay.insertBefore(bootLog, termLine);
+            } else {
+                termDisplay.appendChild(bootLog);
+                if (termLine) termDisplay.appendChild(termLine);
+            }
         }
         bootLog.innerHTML = '';
 
@@ -449,7 +505,7 @@ Theme: ${terminalWindow?.dataset.termTheme || "matrix"}`
     applyTheme('matrix');
     runBootSequence();
 
-    termInput.addEventListener('keydown', async (e) => {
+    async function handleTerminalKeydown(e) {
         if (e.key !== 'Enter') return;
         const val = termInput.value.trim();
         if (!val) return;
@@ -459,13 +515,18 @@ Theme: ${terminalWindow?.dataset.termTheme || "matrix"}`
         const activeGame = window.TerminalGameRegistry?.getActiveGame?.();
         const isInteractiveRunning = Boolean(activeGame);
 
-        termDisplay.insertBefore(
-            Object.assign(document.createElement('div'), {
-                innerHTML: isInteractiveRunning ? val : `<span class="prompt-command">${TERMINAL_PROMPT}</span>&nbsp;${val}`,
-                style: isInteractiveRunning ? 'margin-bottom:2px;color:#ccc' : 'margin-bottom:6px'
-            }),
-            termLine
-        );
+        const echoDiv = Object.assign(document.createElement('div'), {
+            innerHTML: isInteractiveRunning ? val : `<span class="prompt-command">${TERMINAL_PROMPT}</span>&nbsp;${val}`,
+            style: isInteractiveRunning ? 'margin-bottom:2px;color:#ccc' : 'margin-bottom:6px'
+        });
+
+        if (termLine && termLine.parentNode === termDisplay) {
+            termDisplay.insertBefore(echoDiv, termLine);
+        } else {
+            termDisplay.appendChild(echoDiv);
+            if (termLine) termDisplay.appendChild(termLine);
+        }
+
         termInput.value = '';
         updateZorkCursor();
 
@@ -500,7 +561,13 @@ Theme: ${terminalWindow?.dataset.termTheme || "matrix"}`
         loading.style.color = '#ccc';
         loading.style.marginBottom = '10px';
         loading.innerText = `${nextThinkingLabel()}...`;
-        termDisplay.insertBefore(loading, termLine);
+        
+        if (termLine && termLine.parentNode === termDisplay) {
+            termDisplay.insertBefore(loading, termLine);
+        } else {
+            termDisplay.appendChild(loading);
+            if (termLine) termDisplay.appendChild(termLine);
+        }
 
         let response = "Error: AI not loaded.";
         if (window.queryLLM) {
@@ -509,14 +576,114 @@ Theme: ${terminalWindow?.dataset.termTheme || "matrix"}`
             response = "System Error: LLM module missing. Check file path js/llm.js";
         }
 
-        termDisplay.removeChild(loading);
+        if (loading.parentNode === termDisplay) {
+            termDisplay.removeChild(loading);
+        }
 
         const responseDiv = document.createElement('div');
         responseDiv.style.cssText = 'color: #ccc; margin-bottom: 10px; white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere';
-        termDisplay.insertBefore(responseDiv, termLine);
+        
+        if (termLine && termLine.parentNode === termDisplay) {
+            termDisplay.insertBefore(responseDiv, termLine);
+        } else {
+            termDisplay.appendChild(responseDiv);
+            if (termLine) termDisplay.appendChild(termLine);
+        }
 
         await typeWriter(response, responseDiv);
         termInput.disabled = false;
         termInput.focus();
-    });
+    }
+
+    function rebindTerminalInput() {
+        if (!termInput) return;
+        termInput.disabled = false;
+        termInput.readOnly = false;
+        termInput.removeAttribute('disabled');
+        termInput.style.pointerEvents = 'auto';
+        termInput.removeEventListener('keydown', handleTerminalKeydown);
+        termInput.addEventListener('keydown', handleTerminalKeydown);
+        termInput.focus();
+    }
+    window.rebindTerminalInput = rebindTerminalInput;
+
+    // Input guard to recover from external key handlers (e.g., DOOM runtime) that swallow keystrokes.
+    let inputGuardInstalled = false;
+    let inputGuardArmed = false;
+
+    function guardKeyToAction(event) {
+        if (!event || event.isComposing) return null;
+        if (event.metaKey || event.ctrlKey || event.altKey) return null;
+        if (event.key === 'Backspace') return { type: 'backspace' };
+        if (event.key === 'Delete') return { type: 'delete' };
+        if (event.key === 'Enter') return { type: 'enter' };
+        if (event.key.length === 1) return { type: 'char', value: event.key };
+        return null;
+    }
+
+    function guardApply(action) {
+        if (!termInput) return;
+        const start = termInput.selectionStart ?? termInput.value.length;
+        const end = termInput.selectionEnd ?? start;
+        let nextValue = termInput.value;
+        let nextPos = start;
+
+        if (action.type === 'char') {
+            nextValue = nextValue.slice(0, start) + action.value + nextValue.slice(end);
+            nextPos = start + action.value.length;
+        } else if (action.type === 'backspace') {
+            if (start !== end) {
+                nextValue = nextValue.slice(0, start) + nextValue.slice(end);
+                nextPos = start;
+            } else if (start > 0) {
+                nextValue = nextValue.slice(0, start - 1) + nextValue.slice(end);
+                nextPos = start - 1;
+            }
+        } else if (action.type === 'delete') {
+            if (start !== end) {
+                nextValue = nextValue.slice(0, start) + nextValue.slice(end);
+                nextPos = start;
+            } else if (start < nextValue.length) {
+                nextValue = nextValue.slice(0, start) + nextValue.slice(start + 1);
+                nextPos = start;
+            }
+        } else if (action.type === 'enter') {
+            // Let the normal handler process the current value.
+            handleTerminalKeydown(new KeyboardEvent('keydown', { key: 'Enter' }));
+            return;
+        }
+
+        termInput.value = nextValue;
+        termInput.setSelectionRange(nextPos, nextPos);
+        updateZorkCursor();
+    }
+
+    function inputGuardHandler(event) {
+        if (!inputGuardArmed) return;
+        const action = guardKeyToAction(event);
+        if (!action) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (termInput && !termInput.disabled && !termInput.readOnly) {
+            termInput.focus();
+        }
+        guardApply(action);
+    }
+
+    function ensureInputGuard() {
+        if (inputGuardInstalled) return;
+        window.addEventListener('keydown', inputGuardHandler, true);
+        inputGuardInstalled = true;
+    }
+
+    window.enableTerminalInputGuard = function enableTerminalInputGuard() {
+        inputGuardArmed = true;
+        ensureInputGuard();
+    };
+
+    window.disableTerminalInputGuard = function disableTerminalInputGuard() {
+        inputGuardArmed = false;
+    };
+
+    termInput.addEventListener('keydown', handleTerminalKeydown);
 })();
