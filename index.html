@@ -596,6 +596,9 @@
                         <div class="dot red"></div><div class="dot yellow"></div><div class="dot green-dot"></div>
                     </div>
                     <div class="terminal-actions">
+                        <button id="game-exit-btn" style="display: inline-flex; background: rgba(220, 38, 38, 0.8); color: white; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 4px; padding: 4px 10px; font-family: var(--font-mono); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 8px;">
+                            Exit Game
+                        </button>
                         <button class="terminal-expand" id="terminal-expand" aria-label="Expand terminal" aria-pressed="false" onclick="toggleTerminalExpand(event)">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="15 3 21 3 21 9"></polyline>
@@ -873,6 +876,7 @@
     <script src="games/zork/terminal-adapter.js" defer></script>
     <script src="games/riddles/riddles.js" defer></script>
     <script src="games/doom/terminal-adapter.js" defer></script>
+    <script src="games/arena/terminal-adapter.js" defer></script>
     
     <script src="js/terminal.js"></script>
 

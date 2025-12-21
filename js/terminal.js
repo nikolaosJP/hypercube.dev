@@ -12,7 +12,46 @@
     const terminalBar = terminalWindow ? terminalWindow.querySelector('.terminal-bar') : null;
     const terminalOverlay = document.getElementById('terminal-overlay');
     const terminalExpandButton = document.getElementById('terminal-expand');
+    const gameExitButton = document.getElementById('game-exit-btn');
+    
+    // Hide initially
+    if (gameExitButton) gameExitButton.style.display = 'none';
+
     const TERMINAL_PROMPT = '[guest@hyperkube.dev ~]$';
+
+    if (gameExitButton) {
+        gameExitButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            console.log('[terminal] Exit button clicked');
+            if (window.TerminalGameRegistry) {
+                const gameCtx = { enterGameMode, exitGameMode, printStaticOutput, renderOutput };
+                const result = window.TerminalGameRegistry.stopActiveGame(gameCtx);
+                if (result) {
+                    renderOutput(result);
+                } else {
+                    console.warn('[terminal] No active game found to stop');
+                }
+            }
+        });
+    }
+
+    function showExitButton() {
+        if (gameExitButton) {
+            gameExitButton.style.removeProperty('display');
+            gameExitButton.style.display = 'inline-flex';
+            console.log('Showing exit button');
+        } else {
+            console.error('Exit button not found in DOM');
+        }
+    }
+    window.showExitButton = showExitButton;
+
+    function hideExitButton() {
+        if (gameExitButton) {
+            gameExitButton.style.display = 'none';
+        }
+    }
+    window.hideExitButton = hideExitButton;
 
     if (termPrompt) termPrompt.textContent = TERMINAL_PROMPT;
     const defaultPromptHTML = TERMINAL_PROMPT;

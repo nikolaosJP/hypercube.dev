@@ -114,6 +114,7 @@ At that point you have identified True, False, and Random within exactly three q
         if (activeRiddleId) return 'A riddle is already running. Type quit to exit it.';
 
         if (typeof ctx?.enterGameMode === 'function') ctx.enterGameMode();
+        if (typeof window.showExitButton === 'function') window.showExitButton();
         activeRiddleId = id;
 
         return `${riddle.title}\nCategory: ${riddle.category}\n\n${riddle.prompt}`;
@@ -123,6 +124,7 @@ At that point you have identified True, False, and Random within exactly three q
         if (!activeRiddleId) return null;
         activeRiddleId = null;
         if (typeof ctx?.exitGameMode === 'function') ctx.exitGameMode();
+        if (typeof window.hideExitButton === 'function') window.hideExitButton();
         return 'Exited riddles.';
     }
 

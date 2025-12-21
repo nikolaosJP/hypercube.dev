@@ -42,6 +42,7 @@
         termDisplay.appendChild(doomContainer);
         
         if (typeof ctx.enterGameMode === 'function') ctx.enterGameMode();
+        if (typeof window.showExitButton === 'function') window.showExitButton();
         
         // Listen for exit message from iframe
         const handleMessage = (event) => {
@@ -78,6 +79,7 @@
         });
 
         if (ctx && typeof ctx.exitGameMode === 'function') ctx.exitGameMode();
+        if (typeof window.hideExitButton === 'function') window.hideExitButton();
         
         // Scroll to bottom
         requestAnimationFrame(() => {

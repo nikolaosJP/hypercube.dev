@@ -17,6 +17,7 @@
         if (!isRunning()) return null;
         window.ZorkGame.stop();
         if (typeof ctx?.exitGameMode === 'function') ctx.exitGameMode();
+        if (typeof window.hideExitButton === 'function') window.hideExitButton();
         return 'Exited Zork.';
     }
 
@@ -25,6 +26,7 @@
         if (isRunning()) return 'Zork is already running!';
 
         if (typeof ctx?.enterGameMode === 'function') ctx.enterGameMode();
+        if (typeof window.showExitButton === 'function') window.showExitButton();
 
         window.ZorkGame.start((text) => {
             const printer = ctx?.printStaticOutput || window.printStaticOutput;
