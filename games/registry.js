@@ -54,9 +54,8 @@
     function renderGamesList() {
         const entries = list()
             .map((game) => {
-                const title = game.title || game.id;
                 const desc = game.description ? ` ${game.description}` : '';
-                return `  - ${game.id}: ${title}.${desc}`;
+                return `  - ${game.id}:${desc}`;
             })
             .sort((a, b) => a.localeCompare(b));
 
