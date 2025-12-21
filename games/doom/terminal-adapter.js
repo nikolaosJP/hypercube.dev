@@ -23,6 +23,7 @@
 
         const iframe = document.createElement('iframe');
         iframe.src = 'games/doom/doom-window.html';
+        iframe.allow = "autoplay";
         Object.assign(iframe.style, {
             width: '100%',
             height: '100%',

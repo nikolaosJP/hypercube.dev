@@ -182,6 +182,13 @@
                                             let sawDoomStart = false;
                                             let shellTriggered = false;
                                             fs.extract(bundleHref)
+                                                .then(() => {
+                                                    // Minimal config to enable sound (SoundBlaster Port 220, IRQ 7, DMA 1)
+                                                    const cfg = `snd_musicdevice 3\nsnd_sfxdevice 3\nsnd_sbport 220\nsnd_sbirq 7\nsnd_sbdma 1\nsnd_channels 8\n`;
+                                                    if (typeof fs.createFile === 'function') {
+                                                        fs.createFile('DEFAULT.CFG', new TextEncoder().encode(cfg));
+                                                    }
+                                                })
                                                 .then(() => main(['-conf', '.jsdos/dosbox.conf']))
                                                 .then((ci) => {
                                                     clearStatus();
